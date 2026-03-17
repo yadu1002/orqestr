@@ -13,7 +13,7 @@ export default function Navbar({ onWaitlistClick }) {
           <img
             src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/ac801a90c_ChatGPTImageMar17202603_13_55PM.png"
             alt="Orqestr"
-            className="h-12 w-auto"
+            className="h-16 w-auto"
           />
         </div>
         <button
