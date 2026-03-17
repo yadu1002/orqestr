@@ -170,7 +170,7 @@ export default function WaitlistForm() {
               </div>
               <h3 className="text-2xl font-bold mb-3">You're on the list!</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Thanks for your interest in Signaly. We'll be in touch soon with early access details 
+                Thanks for your interest in Orqestr. We'll be in touch soon with early access details 
                 and a personal demo walkthrough.
               </p>
             </motion.div>

@@ -9,10 +9,10 @@ export default function Footer() {
           <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
             <Zap className="w-3 h-3 text-primary" />
           </div>
-          <span className="text-sm font-semibold text-foreground">Signaly</span>
+          <span className="text-sm font-semibold text-foreground">Orqestr</span>
         </div>
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Signaly. All rights reserved.
+          © {new Date().getFullYear()} Orqestr. All rights reserved.
         </p>
       </div>
     </footer>

@@ -15,7 +15,7 @@ export default function Navbar({ onWaitlistClick }) {
           <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
             <Zap className="w-4 h-4 text-primary" />
           </div>
-          <span className="text-lg font-bold text-foreground tracking-tight">Signaly</span>
+          <span className="text-lg font-bold text-foreground tracking-tight">Orqestr</span>
         </div>
         <button
           onClick={onWaitlistClick}

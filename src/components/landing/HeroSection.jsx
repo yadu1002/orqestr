@@ -47,7 +47,7 @@ export default function HeroSection({ onWaitlistClick }) {
           transition={{ duration: 0.7, delay: 0.45 }}
           className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Signaly connects your CRM, product telemetry, and CS tools — then automatically 
+          Orqestr connects your CRM, product telemetry, and CS tools — then automatically 
           triggers the right playbooks when customers need attention.
         </motion.p>
 
