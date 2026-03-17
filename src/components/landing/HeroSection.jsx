@@ -90,7 +90,7 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
-          className="mt-16 text-sm text-muted-foreground/60"
+          className="mt-16 text-sm text-white/40"
         >
           Built for enterprise CS, Sales, and RevOps teams
         </motion.p>
