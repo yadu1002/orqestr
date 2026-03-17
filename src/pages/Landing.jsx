@@ -22,7 +22,6 @@ export default function Landing() {
       <Navbar onWaitlistClick={scrollToWaitlist} />
       <HeroSection onWaitlistClick={scrollToWaitlist} />
       <ProblemSection />
-      <SignalDashboard />
       <HowItWorks />
       <UseCaseTimeline />
       <PlaybookDemo />
