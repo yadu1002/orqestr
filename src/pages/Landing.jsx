@@ -9,6 +9,7 @@ import WaitlistForm from '../components/landing/WaitlistForm';
 import Footer from '../components/landing/Footer';
 import OrchestrationBackground from '../components/landing/OrchestrationBackground';
 import FoundersSection from '../components/landing/FoundersSection';
+import SignalDashboard from '../components/landing/SignalDashboard';
 
 export default function Landing() {
   const scrollToWaitlist = () => {
