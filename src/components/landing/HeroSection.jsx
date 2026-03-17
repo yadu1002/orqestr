@@ -5,32 +5,19 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 export default function HeroSection({ onWaitlistClick }) {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      {/* Base dark gradient */}
-      <div className="absolute inset-0" style={{
-        background: 'linear-gradient(135deg, hsl(222, 44%, 6%) 0%, hsl(210, 40%, 10%) 40%, hsl(160, 30%, 8%) 100%)'
-      }} />
-
-      {/* Mesh glow orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] rounded-full opacity-20 blur-3xl animate-pulse"
-          style={{ background: 'radial-gradient(circle, hsl(142, 72%, 36%) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-[10%] right-[15%] w-[500px] h-[500px] rounded-full opacity-15 blur-3xl"
-          style={{ background: 'radial-gradient(circle, hsl(172, 60%, 40%) 0%, transparent 70%)', animationDelay: '1s' }} />
-        <div className="absolute top-[40%] left-[-5%] w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-pulse"
-          style={{ background: 'radial-gradient(circle, hsl(200, 80%, 50%) 0%, transparent 70%)', animationDelay: '2s' }} />
+      {/* Background effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-primary/8 rounded-full blur-2xl animate-pulse" />
       </div>
 
       {/* Grid pattern */}
-      <div className="absolute inset-0 opacity-[0.06]"
+      <div className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: 'linear-gradient(hsl(142, 60%, 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(142, 60%, 50%) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
           backgroundSize: '60px 60px'
         }}
       />
-
-      {/* Bottom fade to page background */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, hsl(var(--background)))' }} />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <motion.div
@@ -48,7 +35,7 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6 text-white"
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
         >
           Know when customers need help.
           <span className="block text-primary mt-1">Act instantly.</span>
@@ -58,7 +45,7 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.45 }}
-          className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed text-white/70"
+          className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
         >
           Orqestr connects your CRM, product telemetry, and CS tools — then automatically 
           triggers the right playbooks when customers need attention.
@@ -79,7 +66,7 @@ export default function HeroSection({ onWaitlistClick }) {
           </button>
           <a
             href="#how-it-works"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-medium rounded-full border border-white/20 text-white hover:bg-white/10 transition-all duration-300"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-medium rounded-full border border-border text-foreground hover:bg-secondary transition-all duration-300"
           >
             See How It Works
           </a>
@@ -90,7 +77,7 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
-          className="mt-16 text-sm text-white/40"
+          className="mt-16 text-sm text-muted-foreground/60"
         >
           Built for enterprise CS, Sales, and RevOps teams
         </motion.p>
