@@ -5,19 +5,32 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 export default function HeroSection({ onWaitlistClick }) {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      {/* Background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-primary/8 rounded-full blur-2xl animate-pulse" />
+      {/* Base dark gradient */}
+      <div className="absolute inset-0" style={{
+        background: 'linear-gradient(135deg, hsl(222, 44%, 6%) 0%, hsl(210, 40%, 10%) 40%, hsl(160, 30%, 8%) 100%)'
+      }} />
+
+      {/* Mesh glow orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] rounded-full opacity-20 blur-3xl animate-pulse"
+          style={{ background: 'radial-gradient(circle, hsl(142, 72%, 36%) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[10%] right-[15%] w-[500px] h-[500px] rounded-full opacity-15 blur-3xl"
+          style={{ background: 'radial-gradient(circle, hsl(172, 60%, 40%) 0%, transparent 70%)', animationDelay: '1s' }} />
+        <div className="absolute top-[40%] left-[-5%] w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-pulse"
+          style={{ background: 'radial-gradient(circle, hsl(200, 80%, 50%) 0%, transparent 70%)', animationDelay: '2s' }} />
       </div>
 
       {/* Grid pattern */}
-      <div className="absolute inset-0 opacity-[0.03]"
+      <div className="absolute inset-0 opacity-[0.06]"
         style={{
-          backgroundImage: 'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(hsl(142, 60%, 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(142, 60%, 50%) 1px, transparent 1px)',
           backgroundSize: '60px 60px'
         }}
       />
+
+      {/* Bottom fade to page background */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, hsl(var(--background)))' }} />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <motion.div
