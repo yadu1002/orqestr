@@ -37,8 +37,8 @@ export default function HeroSection({ onWaitlistClick }) {
           transition={{ duration: 0.7, delay: 0.3 }}
           className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
         >
-          Turn adoption signals into
-          <span className="block text-primary mt-1">coordinated action</span>
+          Know when customers need help.
+          <span className="block text-primary mt-1">Act instantly.</span>
         </motion.h1>
 
         <motion.p
