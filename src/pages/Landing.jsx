@@ -8,6 +8,7 @@ import PlaybookDemo from '../components/landing/PlaybookDemo';
 import WaitlistForm from '../components/landing/WaitlistForm';
 import Footer from '../components/landing/Footer';
 import OrchestrationBackground from '../components/landing/OrchestrationBackground';
+import FoundersSection from '../components/landing/FoundersSection';
 
 export default function Landing() {
   const scrollToWaitlist = () => {
