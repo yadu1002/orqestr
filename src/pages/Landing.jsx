@@ -7,6 +7,7 @@ import UseCaseTimeline from '../components/landing/UseCaseTimeline';
 import PlaybookDemo from '../components/landing/PlaybookDemo';
 import WaitlistForm from '../components/landing/WaitlistForm';
 import Footer from '../components/landing/Footer';
+import OrchestrationBackground from '../components/landing/OrchestrationBackground';
 
 export default function Landing() {
   const scrollToWaitlist = () => {
@@ -14,7 +15,8 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground relative">
+      <OrchestrationBackground />
       <Navbar onWaitlistClick={scrollToWaitlist} />
       <HeroSection onWaitlistClick={scrollToWaitlist} />
       <ProblemSection />
