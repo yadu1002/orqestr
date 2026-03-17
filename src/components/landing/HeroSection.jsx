@@ -27,7 +27,7 @@ export default function HeroSection({ onWaitlistClick }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-sm font-medium mb-8">
             <Sparkles className="w-3.5 h-3.5" />
-            Adoption Intelligence Platform
+            Customer Signal Orchestration
           </div>
         </motion.div>
 
