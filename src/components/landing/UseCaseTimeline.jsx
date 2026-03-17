@@ -57,7 +57,7 @@ export default function UseCaseTimeline() {
             From signal to outcome
           </h2>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            See how Signaly turns a missed adoption signal into coordinated action — automatically.
+            See how Orqestr turns a missed adoption signal into coordinated action — automatically.
           </p>
         </motion.div>
 

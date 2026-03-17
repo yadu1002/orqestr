@@ -7,7 +7,7 @@ const steps = [
     number: "01",
     icon: Cable,
     title: "Ingest signals from your stack",
-    description: "Connect your CRM, product analytics, support tools, and CS platforms. Signaly unifies signals into a single intelligence layer.",
+    description: "Connect your CRM, product analytics, support tools, and CS platforms. Orqestr unifies signals into a single intelligence layer.",
     tags: ["Salesforce", "Segment", "Gainsight", "Zendesk"]
   },
   {
@@ -15,6 +15,7 @@ const steps = [
     icon: Search,
     title: "Detect adoption gaps automatically",
     description: "AI-powered detection identifies churn risk, stalled onboarding, underused features, and expansion opportunities — in real time.",
+
     tags: ["Churn Risk", "Low Usage", "Feature Gaps", "Expansion"]
   },
   {
