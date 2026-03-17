@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const udayPhoto = "https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/cab0b13e6_240F2BE1-E623-4AD1-8FAD-08174BCD00A3_1_105_c.jpg";
-const abnerPhoto = "https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/bf315c229_7F02DF97-E5A3-4D5B-B2E8-6A3562CC561B_1_105_c.jpeg";
+const abnerPhoto = "https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/977fe9c59_F5916C27-F333-46EF-9D23-CA4A94EBDA87.jpg";
 
 function FounderCard({ photo, name, role, delay }) {
   return (
