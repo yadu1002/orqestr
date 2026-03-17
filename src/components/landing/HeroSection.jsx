@@ -58,7 +58,7 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.45 }}
-          className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed text-white/70"
         >
           Orqestr connects your CRM, product telemetry, and CS tools — then automatically 
           triggers the right playbooks when customers need attention.
