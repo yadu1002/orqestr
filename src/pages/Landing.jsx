@@ -19,15 +19,17 @@ export default function Landing() {
   return (
     <div className="min-h-screen text-foreground relative">
       <OrchestrationBackground />
-      <Navbar onWaitlistClick={scrollToWaitlist} />
-      <HeroSection onWaitlistClick={scrollToWaitlist} />
-      <ProblemSection />
-      <HowItWorks />
-      <UseCaseTimeline />
-      <PlaybookDemo />
-      <FoundersSection />
-      <WaitlistForm />
-      <Footer />
+      <div className="relative z-10">
+        <Navbar onWaitlistClick={scrollToWaitlist} />
+        <HeroSection onWaitlistClick={scrollToWaitlist} />
+        <ProblemSection />
+        <HowItWorks />
+        <UseCaseTimeline />
+        <PlaybookDemo />
+        <FoundersSection />
+        <WaitlistForm />
+        <Footer />
+      </div>
     </div>
   );
 }
