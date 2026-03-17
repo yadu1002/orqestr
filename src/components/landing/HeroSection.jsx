@@ -79,7 +79,7 @@ export default function HeroSection({ onWaitlistClick }) {
           </button>
           <a
             href="#how-it-works"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-medium rounded-full border border-border text-foreground hover:bg-secondary transition-all duration-300"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-medium rounded-full border border-white/20 text-white hover:bg-white/10 transition-all duration-300"
           >
             See How It Works
           </a>
