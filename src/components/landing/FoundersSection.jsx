@@ -25,50 +25,62 @@ function FounderCard({ photo, name, role, delay }) {
 export default function FoundersSection() {
   return (
     <section className="py-24 px-6 relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-8">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Why we built Orqestr
           </h2>
-
-          <div className="text-muted-foreground text-base leading-relaxed max-w-2xl mx-auto space-y-4">
-            <p>
-              Modern software companies collect enormous amounts of customer data across{' '}
-              <span className="text-foreground font-medium">CRM systems</span>,{' '}
-              <span className="text-foreground font-medium">product analytics</span>, and{' '}
-              <span className="text-foreground font-medium">support platforms</span>.
-            </p>
-            <p>
-              But acting on those signals requires{' '}
-              <span className="text-foreground font-medium">jumping between tools</span>,{' '}
-              notifying the right people, and{' '}
-              <span className="text-foreground font-medium">coordinating teams manually</span>.
-            </p>
-            <p className="text-foreground font-semibold text-lg pt-2 border-t border-border/50">
-              Orqestr was created to turn those signals into{' '}
-              <span className="text-primary">coordinated action</span> — automatically.
-            </p>
-          </div>
         </motion.div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-16 mt-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          {/* Uday */}
           <FounderCard
             photo={udayPhoto}
             name="Uday Mandala"
             role="Co-Founder · Economics · Georgia Tech"
             delay={0}
           />
+
+          {/* Quote card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="rounded-2xl px-8 py-12 flex flex-col justify-center shadow-xl text-center"
+            style={{ background: 'hsl(222, 44%, 12%)' }}
+          >
+            <span className="text-5xl font-serif leading-none mb-6" style={{ color: 'hsl(142, 60%, 45%)' }}>"</span>
+
+            <p className="text-white/90 text-base leading-relaxed mb-4">
+              Modern software companies collect enormous amounts of customer data across{' '}
+              <span className="text-white font-semibold">CRM systems</span>,{' '}
+              <span className="text-white font-semibold">product analytics</span>, and{' '}
+              <span className="text-white font-semibold">support platforms</span>.
+            </p>
+            <p className="text-white/90 text-base leading-relaxed mb-4">
+              But acting on those signals requires{' '}
+              <span className="text-white font-semibold">jumping between tools</span>,{' '}
+              notifying the right people, and{' '}
+              <span className="text-white font-semibold">coordinating teams manually</span>.
+            </p>
+            <p className="text-base leading-relaxed font-semibold border-t border-white/10 pt-4 mt-2" style={{ color: 'hsl(142, 60%, 55%)' }}>
+              Orqestr was created to turn those signals into coordinated action — automatically.
+            </p>
+          </motion.div>
+
+          {/* Abner */}
           <FounderCard
             photo={abnerPhoto}
             name="Abner Noel"
             role="Co-Founder · Computer Science · Georgia Tech"
-            delay={0.15}
+            delay={0.3}
           />
         </div>
       </div>
