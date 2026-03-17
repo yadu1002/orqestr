@@ -15,7 +15,6 @@ const steps = [
     icon: Search,
     title: "Detect adoption gaps automatically",
     description: "AI-powered detection identifies churn risk, stalled onboarding, underused features, and expansion opportunities — in real time.",
-
     tags: ["Churn Risk", "Low Usage", "Feature Gaps", "Expansion"]
   },
   {

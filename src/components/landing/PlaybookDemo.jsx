@@ -53,7 +53,7 @@ export default function PlaybookDemo() {
             Explore sample playbooks
           </h2>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            Select a signal type to see how Signaly would respond.
+            Select a signal type to see how Orqestr would respond.
           </p>
         </motion.div>
 
