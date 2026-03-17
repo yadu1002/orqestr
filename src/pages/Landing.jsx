@@ -24,6 +24,7 @@ export default function Landing() {
       <HowItWorks />
       <UseCaseTimeline />
       <PlaybookDemo />
+      <FoundersSection />
       <WaitlistForm />
       <Footer />
     </div>
