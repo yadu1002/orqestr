@@ -48,7 +48,7 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6 text-white"
         >
           Know when customers need help.
           <span className="block text-primary mt-1">Act instantly.</span>
