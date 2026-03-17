@@ -1,7 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
-
 export default function Navbar({ onWaitlistClick }) {
   return (
     <motion.nav
@@ -11,11 +9,12 @@ export default function Navbar({ onWaitlistClick }) {
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary" />
-          </div>
-          <span className="text-lg font-bold text-foreground tracking-tight">Orqestr</span>
+        <div className="flex items-center">
+          <img
+            src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/ac801a90c_ChatGPTImageMar17202603_13_55PM.png"
+            alt="Orqestr"
+            className="h-8 w-auto"
+          />
         </div>
         <button
           onClick={onWaitlistClick}
