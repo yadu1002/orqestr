@@ -20,7 +20,7 @@ const timelineSteps = [
   {
     icon: Bell,
     label: "Auto-triggered",
-    title: "Signaly notifies CSM",
+    title: "Orqestr notifies CSM",
     detail: "Slack alert + Salesforce task created for account owner",
     color: "bg-primary/20 text-primary"
   },
