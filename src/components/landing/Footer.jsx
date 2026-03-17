@@ -5,7 +5,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center">
           <img
-            src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/ac801a90c_ChatGPTImageMar17202603_13_55PM.png"
+            src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/76d337b2b_OrqestrLogo.jpg"
             alt="Orqestr"
             className="h-6 w-auto"
           />
