@@ -6,22 +6,22 @@ const steps = [
   {
     number: "01",
     icon: Cable,
-    title: "Ingest signals from your stack",
-    description: "Connect your CRM, product analytics, support tools, and CS platforms. Orqestr unifies signals into a single intelligence layer.",
+    title: "Connect your stack in minutes",
+    description: "Connect Salesforce, Segment, and Gainsight in under 15 minutes — no data team or engineering support required.",
     tags: ["Salesforce", "Segment", "Gainsight", "Zendesk"]
   },
   {
     number: "02",
     icon: Search,
     title: "Detect adoption gaps automatically",
-    description: "AI-powered detection identifies churn risk, stalled onboarding, underused features, and expansion opportunities — in real time.",
+    description: "AI-powered detection identifies churn risk, stalled onboarding, underused features, and expansion opportunities in real time.",
     tags: ["Churn Risk", "Low Usage", "Feature Gaps", "Expansion"]
   },
   {
     number: "03",
     icon: Play,
     title: "Trigger coordinated playbooks",
-    description: "Automatically notify the right people, create tasks, trigger workflows, and schedule outreach — across CS, Sales, and Support.",
+    description: "Automatically notify the right people, create CRM tasks, trigger email sequences, and schedule outreach — across CS, Sales, and Support.",
     tags: ["Auto-notify", "Task Creation", "Workflows", "Outreach"]
   }
 ];

@@ -116,6 +116,23 @@ export default function PlaybookDemo() {
             </div>
           </motion.div>
         </AnimatePresence>
+
+        {/* CTA below demo */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mt-16"
+        >
+          <p className="text-muted-foreground mb-4">Ready to automate your own playbooks?</p>
+          <button
+            onClick={() => document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })}
+            className="inline-flex items-center gap-2 px-8 py-3.5 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-lg shadow-primary/20"
+          >
+            Join the Waitlist
+          </button>
+        </motion.div>
       </div>
     </section>
   );

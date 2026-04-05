@@ -21,7 +21,7 @@ export default function Demo() {
   };
 
   return (
-    <div className="h-screen flex overflow-hidden font-mono" style={{ background: '#0D1117', color: '#F0F6FC' }}>
+    <div className="h-screen flex overflow-hidden font-inter" style={{ background: '#0D1117', color: '#F0F6FC' }}>
       <DemoSidebar activeView={activeView} onNavigate={setActiveView} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <DemoHeader activeView={activeView} />

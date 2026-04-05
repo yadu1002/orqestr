@@ -6,8 +6,8 @@ const timelineSteps = [
   {
     icon: ShoppingCart,
     label: "Signal Detected",
-    title: "Customer bought Feature X",
-    detail: "Enterprise plan — Analytics Pro module activated",
+    title: "Customer purchased Advanced Analytics module",
+    detail: "Enterprise plan — Advanced Analytics module activated",
     color: "text-chart-2"
   },
   {

@@ -77,9 +77,9 @@ export default function HeroSection({ onWaitlistClick }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
-          className="mt-16 text-sm text-muted-foreground/60"
+          className="mt-16 text-sm text-muted-foreground/60 italic max-w-2xl mx-auto"
         >
-          Built for enterprise CS, Sales, and RevOps teams
+          "The average SaaS company misses over 30% of churn signals because no system is responsible for acting on them."
         </motion.p>
       </div>
     </section>
