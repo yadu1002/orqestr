@@ -7,6 +7,7 @@ const titles = {
   accounts: 'Accounts',
   integrations: 'Integrations',
   analytics: 'Analytics',
+  admin: 'Waitlist Admin',
 };
 
 const subtitles = {
@@ -15,6 +16,7 @@ const subtitles = {
   accounts: 'Customer health overview',
   integrations: 'Connected data sources',
   analytics: 'Playbook performance & outcomes',
+  admin: 'Sample waitlist signups and intent data',
 };
 
 export default function DemoHeader({ activeView }) {

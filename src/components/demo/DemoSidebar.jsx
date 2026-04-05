@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, BookOpen, Users, Plug, BarChart2, Zap } from 'lucide-react';
+import { Bell, BookOpen, Users, Plug, BarChart2, ShieldCheck } from 'lucide-react';
 
 const navItems = [
   { id: 'signals', label: 'Signal Feed', icon: Bell, badge: 12 },
@@ -7,6 +7,10 @@ const navItems = [
   { id: 'accounts', label: 'Accounts', icon: Users },
   { id: 'integrations', label: 'Integrations', icon: Plug },
   { id: 'analytics', label: 'Analytics', icon: BarChart2 },
+];
+
+const adminItems = [
+  { id: 'admin', label: 'Waitlist Admin', icon: ShieldCheck },
 ];
 
 export default function DemoSidebar({ activeView, onNavigate }) {
@@ -46,6 +50,25 @@ export default function DemoSidebar({ activeView, onNavigate }) {
           </button>
         ))}
       </nav>
+
+      {/* Admin section */}
+      <div className="px-3 pb-2">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-2 mb-1">Admin</p>
+        {adminItems.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            onClick={() => onNavigate(id)}
+            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all ${
+              activeView === id
+                ? 'bg-primary/10 text-primary font-medium'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+            {label}
+          </button>
+        ))}
+      </div>
 
       {/* User */}
       <div className="p-3 border-t border-border">

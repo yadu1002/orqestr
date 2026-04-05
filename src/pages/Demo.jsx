@@ -6,6 +6,7 @@ import PlaybooksView from '../components/demo/PlaybooksView';
 import AccountsView from '../components/demo/AccountsView';
 import IntegrationsView from '../components/demo/IntegrationsView';
 import AnalyticsView from '../components/demo/AnalyticsView';
+import AdminDemoView from '../components/demo/AdminDemoView';
 
 export default function Demo() {
   const [activeView, setActiveView] = useState('signals');
@@ -16,6 +17,7 @@ export default function Demo() {
     accounts: <AccountsView />,
     integrations: <IntegrationsView />,
     analytics: <AnalyticsView />,
+    admin: <AdminDemoView />,
   };
 
   return (
