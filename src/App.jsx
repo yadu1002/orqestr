@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Landing from './pages/Landing';
 import Admin from './pages/Admin';
+import Demo from './pages/Demo';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {
@@ -38,6 +39,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Navigate to="/Landing" replace />} />
       <Route path="/Landing" element={<Landing />} />
       <Route path="/Admin" element={<Admin />} />
+      <Route path="/Demo" element={<Demo />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

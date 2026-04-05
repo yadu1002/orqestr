@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 export default function Navbar({ onWaitlistClick }) {
   return (
     <motion.nav
@@ -16,12 +17,20 @@ export default function Navbar({ onWaitlistClick }) {
             className="h-16 w-auto"
           />
         </div>
-        <button
-          onClick={onWaitlistClick}
-          className="px-5 py-2 text-sm font-medium rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200"
-        >
-          Join Waitlist
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/Demo"
+            className="px-5 py-2 text-sm font-medium rounded-full border border-border text-foreground hover:bg-secondary transition-all duration-200"
+          >
+            Live Demo
+          </Link>
+          <button
+            onClick={onWaitlistClick}
+            className="px-5 py-2 text-sm font-medium rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200"
+          >
+            Join Waitlist
+          </button>
+        </div>
       </div>
     </motion.nav>
   );
