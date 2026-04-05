@@ -15,17 +15,15 @@ const accounts = [
 
 function HealthPill({ score }) {
   const cfg = score >= 70
-    ? 'bg-emerald-500/15 text-emerald-400'
+    ? 'bg-primary/8 text-primary'
     : score >= 40
-    ? 'bg-orange-500/15 text-orange-400'
-    : 'bg-red-500/15 text-red-400';
+    ? 'bg-orange-50 text-orange-600'
+    : 'bg-red-50 text-red-600';
+  const barColor = score >= 70 ? 'bg-primary' : score >= 40 ? 'bg-orange-400' : 'bg-red-500';
   return (
     <div className="flex items-center gap-2">
-      <div className="w-16 h-1.5 bg-white/8 rounded-full overflow-hidden">
-        <div
-          className={score >= 70 ? 'h-full bg-emerald-500 rounded-full' : score >= 40 ? 'h-full bg-orange-400 rounded-full' : 'h-full bg-red-500 rounded-full'}
-          style={{ width: `${score}%` }}
-        />
+      <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
+        <div className={`h-full rounded-full ${barColor}`} style={{ width: `${score}%` }} />
       </div>
       <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${cfg}`}>{score}</span>
     </div>
@@ -51,21 +49,20 @@ export default function AccountsView() {
     <div>
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Total Accounts', value: accounts.length, color: 'text-white' },
-          { label: 'At-Risk Accounts', value: atRisk, color: 'text-red-400' },
-          { label: 'Total ARR', value: `$${(totalArr / 1000).toFixed(0)}k`, color: 'text-white' },
-          { label: 'At-Risk ARR', value: `$${(atRiskArr / 1000).toFixed(0)}k`, color: 'text-orange-400' },
+          { label: 'Total Accounts', value: accounts.length, color: 'text-foreground' },
+          { label: 'At-Risk Accounts', value: atRisk, color: 'text-red-600' },
+          { label: 'Total ARR', value: `$${(totalArr / 1000).toFixed(0)}k`, color: 'text-foreground' },
+          { label: 'At-Risk ARR', value: `$${(atRiskArr / 1000).toFixed(0)}k`, color: 'text-orange-600' },
         ].map(stat => (
-          <div key={stat.label} className="rounded-xl bg-white/4 border border-white/8 p-4">
-            <p className="text-xs text-white/40 mb-1">{stat.label}</p>
+          <div key={stat.label} className="rounded-2xl bg-card border border-border p-4 shadow-sm">
+            <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
             <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/8 bg-white/3 overflow-hidden">
-        {/* Table header */}
-        <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-4 py-2.5 border-b border-white/8 bg-white/3">
+      <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3 border-b border-border bg-secondary/60">
           {[
             { label: 'Account', sort: null },
             { label: 'ARR', sort: 'arr' },
@@ -78,7 +75,7 @@ export default function AccountsView() {
             <button
               key={col.label}
               onClick={() => col.sort && setSort(col.sort)}
-              className={`text-left text-[10px] font-semibold uppercase tracking-wider ${col.sort ? 'hover:text-white/70 cursor-pointer' : 'cursor-default'} ${sort === col.sort ? 'text-emerald-400' : 'text-white/30'}`}
+              className={`text-left text-[10px] font-semibold uppercase tracking-wider ${col.sort ? 'hover:text-foreground cursor-pointer' : 'cursor-default'} ${sort === col.sort ? 'text-primary' : 'text-muted-foreground'}`}
             >
               {col.label}
             </button>
@@ -91,32 +88,30 @@ export default function AccountsView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: i * 0.04 }}
-            className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-4 py-3 border-b border-white/5 hover:bg-white/3 transition-colors last:border-0"
+            className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3.5 border-b border-border hover:bg-secondary/30 transition-colors last:border-0"
           >
             <div>
-              <p className="text-sm font-medium text-white">{account.company}</p>
-              <span className="text-[10px] text-white/30 bg-white/5 px-1.5 py-0.5 rounded">{account.tier}</span>
+              <p className="text-sm font-medium text-foreground">{account.company}</p>
+              <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded border border-border">{account.tier}</span>
             </div>
-            <p className="text-sm text-white/70 self-center">${(account.arr / 1000).toFixed(0)}k</p>
-            <div className="self-center">
-              <HealthPill score={account.health} />
-            </div>
-            <p className="text-xs text-white/50 self-center">{account.csm}</p>
-            <p className="text-xs text-white/50 self-center">{new Date(account.renewal).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+            <p className="text-sm text-foreground/70 self-center">${(account.arr / 1000).toFixed(0)}k</p>
+            <div className="self-center"><HealthPill score={account.health} /></div>
+            <p className="text-xs text-muted-foreground self-center">{account.csm}</p>
+            <p className="text-xs text-muted-foreground self-center">{new Date(account.renewal).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
             <div className="self-center">
               {account.signals > 0 ? (
-                <span className="text-xs font-semibold text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
                   {account.signals} alert{account.signals > 1 ? 's' : ''}
                 </span>
               ) : (
-                <span className="text-xs text-white/20">—</span>
+                <span className="text-xs text-muted-foreground">—</span>
               )}
             </div>
             <div className="flex items-center gap-1.5 self-center">
-              {account.trend === 'up' && <TrendingUp className="w-3 h-3 text-emerald-400" />}
-              {account.trend === 'down' && <TrendingDown className="w-3 h-3 text-red-400" />}
-              {account.trend === 'flat' && <Minus className="w-3 h-3 text-white/30" />}
-              <span className="text-xs text-white/40">{account.lastActive}</span>
+              {account.trend === 'up' && <TrendingUp className="w-3 h-3 text-primary" />}
+              {account.trend === 'down' && <TrendingDown className="w-3 h-3 text-red-500" />}
+              {account.trend === 'flat' && <Minus className="w-3 h-3 text-muted-foreground" />}
+              <span className="text-xs text-muted-foreground">{account.lastActive}</span>
             </div>
           </motion.div>
         ))}

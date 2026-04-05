@@ -19,7 +19,7 @@ export default function Demo() {
   };
 
   return (
-    <div className="h-screen flex bg-[#0f1117] text-white overflow-hidden font-inter">
+    <div className="h-screen flex bg-background text-foreground overflow-hidden font-inter">
       <DemoSidebar activeView={activeView} onNavigate={setActiveView} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <DemoHeader activeView={activeView} />

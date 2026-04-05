@@ -11,15 +11,15 @@ const navItems = [
 
 export default function DemoSidebar({ activeView, onNavigate }) {
   return (
-    <div className="w-56 shrink-0 flex flex-col border-r border-white/8 bg-[#0d1018]">
+    <div className="w-56 shrink-0 flex flex-col border-r border-border bg-card">
       {/* Logo */}
-      <div className="h-14 flex items-center px-4 border-b border-white/8">
+      <div className="h-14 flex items-center px-4 border-b border-border">
         <img
           src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/76d337b2b_OrqestrLogo.jpg"
           alt="Orqestr"
-          className="h-7 w-auto brightness-0 invert"
+          className="h-7 w-auto"
         />
-        <span className="ml-2 text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">Demo</span>
+        <span className="ml-2 text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">Demo</span>
       </div>
 
       {/* Nav */}
@@ -30,8 +30,8 @@ export default function DemoSidebar({ activeView, onNavigate }) {
             onClick={() => onNavigate(id)}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
               activeView === id
-                ? 'bg-emerald-500/15 text-emerald-400 font-medium'
-                : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                ? 'bg-primary/10 text-primary font-medium'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
             }`}
           >
             <div className="flex items-center gap-2.5">
@@ -39,7 +39,7 @@ export default function DemoSidebar({ activeView, onNavigate }) {
               {label}
             </div>
             {badge && (
-              <span className="text-[10px] font-bold bg-red-500 text-white px-1.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold bg-destructive text-white px-1.5 py-0.5 rounded-full">
                 {badge}
               </span>
             )}
@@ -48,14 +48,14 @@ export default function DemoSidebar({ activeView, onNavigate }) {
       </nav>
 
       {/* User */}
-      <div className="p-3 border-t border-white/8">
+      <div className="p-3 border-t border-border">
         <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg">
-          <div className="w-7 h-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-semibold">
+          <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-primary text-xs font-semibold">
             SC
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-white/80 truncate">Sarah Chen</p>
-            <p className="text-[10px] text-white/40">VP Customer Success</p>
+            <p className="text-xs font-medium text-foreground truncate">Sarah Chen</p>
+            <p className="text-[10px] text-muted-foreground">VP Customer Success</p>
           </div>
         </div>
       </div>
