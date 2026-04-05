@@ -7,7 +7,6 @@ const signals = [
     id: 'SIG-001',
     company: 'Acme Corp',
     signalType: 'Low Feature Adoption',
-    signalTypeColor: 'bg-orange-50 text-orange-700 border-orange-200',
     severity: 'high',
     status: 'open',
     description: 'Advanced Analytics purchased 67 days ago — 0 active users out of 12 licensed seats.',
@@ -38,10 +37,9 @@ const signals = [
     id: 'SIG-002',
     company: 'TechFlow Inc',
     signalType: 'No Login',
-    signalTypeColor: 'bg-red-50 text-red-700 border-red-200',
     severity: 'critical',
     status: 'open',
-    description: '3 key users haven\'t logged in for 14 days. Engagement dropping across the account.',
+    description: "3 key users haven't logged in for 14 days. Engagement dropping across the account.",
     csm: 'Marcus Johnson',
     timestamp: '5 hours ago',
     arr: '$42,000',
@@ -71,7 +69,6 @@ const signals = [
     id: 'SIG-003',
     company: 'DataSync Pro',
     signalType: 'Expansion Signal',
-    signalTypeColor: 'bg-green-50 text-green-700 border-green-200',
     severity: 'opportunity',
     status: 'open',
     description: 'Usage at 94% of plan limit. Strong upsell signal — team added 16 users this quarter.',
@@ -102,7 +99,6 @@ const signals = [
     id: 'SIG-004',
     company: 'CloudBase',
     signalType: 'Support Escalation',
-    signalTypeColor: 'bg-purple-50 text-purple-700 border-purple-200',
     severity: 'high',
     status: 'open',
     description: '3 P1 tickets opened in 7 days. Escalation pattern detected — API integration failures.',
@@ -136,7 +132,6 @@ const signals = [
     id: 'SIG-005',
     company: 'FinOps Labs',
     signalType: 'Low Feature Adoption',
-    signalTypeColor: 'bg-orange-50 text-orange-700 border-orange-200',
     severity: 'medium',
     status: 'snoozed',
     description: 'Workflow Builder used by only 2 of 45 licensed users — adoption at 4.4%.',
@@ -169,7 +164,6 @@ const signals = [
     id: 'SIG-006',
     company: 'ScaleUp AI',
     signalType: 'Renewal Risk',
-    signalTypeColor: 'bg-rose-50 text-rose-700 border-rose-200',
     severity: 'critical',
     status: 'open',
     description: 'Health score dropped 23 points in 30 days. Renewal in 32 days — no QBR scheduled.',
@@ -198,35 +192,41 @@ const signals = [
   },
 ];
 
-const severityConfig = {
-  critical: { label: 'Critical', bolt: 'text-red-500', bar: 'bg-red-500', leftBorder: 'border-l-red-500' },
-  high: { bolt: 'text-orange-500', bar: 'bg-orange-400', leftBorder: 'border-l-orange-400' },
-  medium: { bolt: 'text-yellow-500', bar: 'bg-yellow-400', leftBorder: 'border-l-yellow-400' },
-  low: { bolt: 'text-blue-400', bar: 'bg-blue-400', leftBorder: 'border-l-blue-300' },
-  opportunity: { bolt: 'text-emerald-500', bar: 'bg-emerald-500', leftBorder: 'border-l-emerald-500' },
+const SEV = {
+  critical: { label: 'CRITICAL', color: '#FF3B30', border: '#FF3B30', textClass: 'text-[#FF3B30]' },
+  high:     { label: 'HIGH',     color: '#FF9500', border: '#FF9500', textClass: 'text-[#FF9500]' },
+  medium:   { label: 'MEDIUM',   color: '#FFD60A', border: '#FFD60A', textClass: 'text-[#FFD60A]' },
+  low:      { label: 'LOW',      color: '#58A6FF', border: '#58A6FF', textClass: 'text-[#58A6FF]' },
+  opportunity: { label: 'EXPANSION', color: '#00C853', border: '#00C853', textClass: 'text-[#00C853]' },
 };
 
-const statusConfig = {
-  open: { label: 'Open', className: 'bg-blue-50 text-blue-700 border-blue-200' },
-  actioned: { label: 'Actioned', className: 'bg-green-50 text-green-700 border-green-200' },
-  snoozed: { label: 'Snoozed', className: 'bg-slate-100 text-slate-600 border-slate-200' },
+const STATUS = {
+  open:     { label: 'OPEN',     cls: 'text-[#FF9500] border-[#FF9500]/40 bg-[#FF9500]/10' },
+  actioned: { label: 'ACTIONED', cls: 'text-[#00C853] border-[#00C853]/40 bg-[#00C853]/10' },
+  snoozed:  { label: 'SNOOZED',  cls: 'text-[#8B949E] border-[#8B949E]/40 bg-[#8B949E]/10' },
 };
+
+function MonoValue({ children, className = '' }) {
+  return (
+    <span className={`font-mono ${className}`}>{children}</span>
+  );
+}
 
 function HealthBar({ score }) {
-  const color = score >= 70 ? 'bg-emerald-500' : score >= 40 ? 'bg-orange-400' : 'bg-red-500';
+  const color = score >= 70 ? '#00C853' : score >= 40 ? '#FF9500' : '#FF3B30';
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${score}%` }} />
+      <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: '#30363D' }}>
+        <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, background: color }} />
       </div>
-      <span className="text-xs font-semibold text-slate-600 w-6 text-right">{score}</span>
+      <MonoValue className="text-xs text-[#F0F6FC] w-6 text-right">{score}</MonoValue>
     </div>
   );
 }
 
 function SignalRow({ signal, onClick, onAction }) {
-  const sev = severityConfig[signal.severity] || severityConfig.medium;
-  const status = statusConfig[signal.status];
+  const sev = SEV[signal.severity] || SEV.medium;
+  const status = STATUS[signal.status];
 
   const handleAction = (e, action) => {
     e.stopPropagation();
@@ -235,67 +235,69 @@ function SignalRow({ signal, onClick, onAction }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 6 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: -16 }}
+      exit={{ opacity: 0, x: -12 }}
       onClick={() => onClick(signal)}
-      className={`bg-white border border-slate-200 border-l-4 ${sev.leftBorder} rounded-lg px-5 py-4 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group`}
+      className="relative flex items-stretch cursor-pointer group overflow-hidden rounded"
+      style={{ background: '#1C2128', border: '1px solid #30363D' }}
     >
-      <div className="flex items-start gap-4">
-        {/* Severity bolt */}
-        <div className="mt-0.5 shrink-0">
-          <Zap className={`w-4 h-4 ${sev.bolt} fill-current`} />
-        </div>
+      {/* Severity bar */}
+      <div className="w-1 shrink-0 self-stretch" style={{ background: sev.color }} />
 
-        {/* Main content */}
+      <div className="flex-1 flex items-center gap-4 px-4 py-3 min-w-0">
+        {/* Severity label */}
+        <MonoValue className={`text-[10px] font-bold w-20 shrink-0 ${sev.textClass}`}>
+          {sev.label}
+        </MonoValue>
+
+        {/* Company + description */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="text-sm font-semibold text-slate-900">{signal.company}</span>
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border ${signal.signalTypeColor}`}>
-              {signal.signalType}
-            </span>
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border ${status.className}`}>
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-sm font-bold text-[#F0F6FC]">{signal.company}</span>
+            <span className={`text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border ${status.cls}`}>
               {status.label}
             </span>
           </div>
-          <p className="text-sm text-slate-500 leading-snug mb-2">{signal.description}</p>
-          <div className="flex items-center gap-4 text-[11px] text-slate-400">
-            <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{signal.timestamp}</span>
-            <span className="flex items-center gap-1"><User className="w-3 h-3" />{signal.csm}</span>
-            <span className="text-slate-300 ml-auto font-mono">{signal.id}</span>
-          </div>
+          <MonoValue className="text-xs text-[#8B949E] leading-snug block truncate">
+            {signal.description}
+          </MonoValue>
         </div>
 
-        {/* Action icons */}
-        <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => handleAction(e, 'call')}
-            className="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-            title="Schedule Call"
-          >
-            <Phone className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={(e) => handleAction(e, 'email')}
-            className="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-            title="Send Email"
-          >
-            <Mail className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={(e) => handleAction(e, 'snooze')}
-            className="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-            title="Snooze"
-          >
-            <BellOff className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onClick(signal); }}
-            className="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-            title="View Detail"
-          >
-            <Eye className="w-3.5 h-3.5" />
-          </button>
+        {/* Source + meta */}
+        <div className="flex items-center gap-3 shrink-0">
+          <span className="text-[10px] font-mono px-2 py-1 rounded" style={{ background: '#0D1117', border: '1px solid #30363D', color: '#8B949E' }}>
+            {signal.source}
+          </span>
+          <div className="text-right">
+            <MonoValue className="text-[10px] text-[#8B949E] block">{signal.timestamp}</MonoValue>
+            <MonoValue className="text-[10px] text-[#8B949E] block">{signal.csm}</MonoValue>
+          </div>
+          <MonoValue className="text-[10px] text-[#30363D] group-hover:text-[#8B949E] transition-colors w-16 text-right">
+            {signal.id}
+          </MonoValue>
+        </div>
+
+        {/* Hover actions */}
+        <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          {[
+            { icon: Play, action: 'playbook', title: 'Run Playbook', green: true },
+            { icon: Phone, action: 'call', title: 'Schedule Call' },
+            { icon: Mail, action: 'email', title: 'Send Email' },
+            { icon: BellOff, action: 'snooze', title: 'Snooze' },
+          ].map(({ icon: Icon, action, title, green }) => (
+            <button
+              key={action}
+              onClick={(e) => handleAction(e, action)}
+              title={title}
+              className="w-7 h-7 flex items-center justify-center rounded transition-colors"
+              style={{ background: 'transparent' }}
+              onMouseEnter={e => e.currentTarget.style.background = green ? 'rgba(0,200,83,0.15)' : '#30363D'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <Icon className={`w-3.5 h-3.5 ${green ? 'text-[#00C853]' : 'text-[#8B949E]'}`} style={green ? {} : {}} />
+            </button>
+          ))}
         </div>
       </div>
     </motion.div>
@@ -306,8 +308,8 @@ function SignalModal({ signal, onClose, onAction }) {
   const [playbookRun, setPlaybookRun] = useState(false);
   if (!signal) return null;
 
-  const sev = severityConfig[signal.severity] || severityConfig.medium;
-  const status = statusConfig[signal.status];
+  const sev = SEV[signal.severity] || SEV.medium;
+  const status = STATUS[signal.status];
 
   const handleRunPlaybook = () => {
     setPlaybookRun(true);
@@ -316,7 +318,6 @@ function SignalModal({ signal, onClose, onAction }) {
 
   return (
     <AnimatePresence>
-      {/* Backdrop */}
       <motion.div
         key="backdrop"
         initial={{ opacity: 0 }}
@@ -324,123 +325,121 @@ function SignalModal({ signal, onClose, onAction }) {
         exit={{ opacity: 0 }}
         onClick={onClose}
         className="fixed inset-0 z-40"
-        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
       />
-      {/* Modal */}
       <motion.div
         key="modal"
         initial={{ opacity: 0, scale: 0.97, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 8 }}
-        transition={{ duration: 0.18, ease: 'easeOut' }}
+        transition={{ duration: 0.16, ease: 'easeOut' }}
         onClick={e => e.stopPropagation()}
         className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
       >
         <div
-          className="pointer-events-auto bg-white flex flex-col shadow-2xl overflow-hidden"
-          style={{ width: 640, maxHeight: '85vh', borderRadius: 12 }}
+          className="pointer-events-auto flex flex-col overflow-hidden"
+          style={{ width: 640, maxHeight: '85vh', borderRadius: 12, background: '#1C2128', border: '1px solid #30363D', boxShadow: '0 24px 64px rgba(0,0,0,0.6)' }}
         >
           {/* Header */}
-          <div className="px-6 py-5 flex items-start justify-between shrink-0">
+          <div className="px-6 py-4 shrink-0 flex items-start justify-between" style={{ borderBottom: '1px solid #30363D' }}>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-lg font-bold text-slate-900">{signal.company}</h2>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border ${signal.signalTypeColor}`}>
-                  {signal.signalType}
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h2 className="text-base font-bold text-[#F0F6FC]">{signal.company}</h2>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border" style={{ color: sev.color, borderColor: `${sev.color}50`, background: `${sev.color}15` }}>
+                  {sev.label}
                 </span>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border ${status.className}`}>
+                <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${status.cls}`}>
                   {status.label}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-mono">{signal.id}</p>
+              <MonoValue className="text-[11px] text-[#8B949E]">{signal.id} · {signal.signalType}</MonoValue>
             </div>
-            <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors mt-0.5 shrink-0">
+            <button
+              onClick={onClose}
+              className="w-7 h-7 flex items-center justify-center rounded transition-colors shrink-0 mt-0.5"
+              style={{ color: '#8B949E' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#30363D'; e.currentTarget.style.color = '#F0F6FC'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#8B949E'; }}
+            >
               <X className="w-4 h-4" />
             </button>
           </div>
-          <div className="border-t border-slate-100" />
 
           {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#30363D #1C2128' }}>
+
             {/* Signal Summary */}
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Signal Summary</h3>
-              <div className="bg-slate-50 rounded-lg p-4 space-y-2.5">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs text-slate-500 shrink-0">Trigger</span>
-                  <span className="text-xs font-medium text-slate-800 text-right">{signal.triggerCondition}</span>
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs text-slate-500 shrink-0">Date Detected</span>
-                  <span className="text-xs font-medium text-slate-800">{signal.dateDetected}</span>
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs text-slate-500 shrink-0">Severity</span>
-                  <span className="flex items-center gap-1">
-                    <Zap className={`w-3 h-3 ${sev.bolt} fill-current`} />
-                    <span className="text-xs font-medium text-slate-800 capitalize">{signal.severity}</span>
-                  </span>
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs text-slate-500 shrink-0">Source</span>
-                  <span className="text-xs font-medium text-slate-800">{signal.source}</span>
-                </div>
+            <div className="px-6 py-4" style={{ borderBottom: '1px solid #30363D' }}>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#00C853] mb-3">Signal Summary</p>
+              <div className="rounded space-y-2 p-3" style={{ background: '#0D1117', border: '1px solid #30363D' }}>
+                {[
+                  { label: 'TRIGGER', value: signal.triggerCondition },
+                  { label: 'DATE DETECTED', value: signal.dateDetected },
+                  { label: 'SEVERITY', value: <span style={{ color: sev.color }}>{sev.label}</span> },
+                  { label: 'SOURCE', value: signal.source },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex items-start justify-between gap-4">
+                    <MonoValue className="text-[10px] text-[#8B949E] shrink-0">{label}</MonoValue>
+                    <MonoValue className="text-[11px] text-[#F0F6FC] text-right">{value}</MonoValue>
+                  </div>
+                ))}
               </div>
             </div>
 
             {/* Account Context */}
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Account Context</h3>
-              <div className="grid grid-cols-4 gap-3">
+            <div className="px-6 py-4" style={{ borderBottom: '1px solid #30363D' }}>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#00C853] mb-3">Account Context</p>
+              <div className="grid grid-cols-4 gap-2 mb-3">
                 {[
                   { icon: DollarSign, label: 'ARR', value: signal.arr },
                   { icon: User, label: 'CSM', value: signal.csm },
-                  { icon: Calendar, label: 'Renewal', value: signal.renewal },
-                  { icon: Package, label: 'Plan', value: signal.plan },
+                  { icon: Calendar, label: 'RENEWAL', value: signal.renewal },
+                  { icon: Package, label: 'PLAN', value: signal.plan },
                 ].map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="bg-slate-50 rounded-lg p-3">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <Icon className="w-3 h-3 text-slate-400" />
-                      <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">{label}</span>
+                  <div key={label} className="rounded p-3" style={{ background: '#0D1117', border: '1px solid #30363D' }}>
+                    <div className="flex items-center gap-1 mb-1">
+                      <Icon className="w-3 h-3 text-[#8B949E]" />
+                      <MonoValue className="text-[9px] text-[#8B949E] uppercase tracking-wide">{label}</MonoValue>
                     </div>
-                    <p className="text-sm font-semibold text-slate-800">{value}</p>
+                    <MonoValue className="text-xs text-[#F0F6FC] font-semibold">{value}</MonoValue>
                   </div>
                 ))}
               </div>
-              <div className="mt-3">
+              <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs text-slate-500">Health Score</span>
-                  <span className="text-xs font-semibold text-slate-800">{signal.health}/100</span>
+                  <MonoValue className="text-[10px] text-[#8B949E]">HEALTH SCORE</MonoValue>
+                  <MonoValue className="text-[10px] text-[#F0F6FC]">{signal.health}/100</MonoValue>
                 </div>
                 <HealthBar score={signal.health} />
               </div>
             </div>
 
             {/* Adoption Metrics */}
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Adoption Metrics</h3>
-              <div className="space-y-2.5">
-                <div className="flex justify-between">
-                  <span className="text-xs text-slate-500">Feature / Module</span>
-                  <span className="text-xs font-medium text-slate-800">{signal.feature}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-xs text-slate-500">Activation Date</span>
-                  <span className="text-xs font-medium text-slate-800">{signal.activationDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-xs text-slate-500">Active / Licensed Seats</span>
-                  <span className="text-xs font-medium text-slate-800">{signal.activeUsers} / {signal.licensedSeats} users</span>
-                </div>
+            <div className="px-6 py-4" style={{ borderBottom: '1px solid #30363D' }}>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#00C853] mb-3">Adoption Metrics</p>
+              <div className="space-y-2">
+                {[
+                  { label: 'FEATURE / MODULE', value: signal.feature },
+                  { label: 'ACTIVATION DATE', value: signal.activationDate },
+                  { label: 'ACTIVE / LICENSED', value: `${signal.activeUsers} / ${signal.licensedSeats} users` },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex justify-between">
+                    <MonoValue className="text-[10px] text-[#8B949E]">{label}</MonoValue>
+                    <MonoValue className="text-[11px] text-[#F0F6FC]">{value}</MonoValue>
+                  </div>
+                ))}
                 <div>
                   <div className="flex justify-between mb-1">
-                    <span className="text-xs text-slate-500">Usage Rate</span>
-                    <span className="text-xs font-semibold text-slate-800">{signal.usagePct}%</span>
+                    <MonoValue className="text-[10px] text-[#8B949E]">USAGE RATE</MonoValue>
+                    <MonoValue className="text-[10px] text-[#F0F6FC]">{signal.usagePct}%</MonoValue>
                   </div>
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#30363D' }}>
                     <div
-                      className={`h-full rounded-full ${signal.usagePct > 80 ? 'bg-emerald-500' : signal.usagePct > 40 ? 'bg-orange-400' : 'bg-red-500'}`}
-                      style={{ width: `${signal.usagePct}%` }}
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${signal.usagePct}%`,
+                        background: signal.usagePct > 80 ? '#00C853' : signal.usagePct > 40 ? '#FF9500' : '#FF3B30'
+                      }}
                     />
                   </div>
                 </div>
@@ -448,15 +447,18 @@ function SignalModal({ signal, onClose, onAction }) {
             </div>
 
             {/* Recommended Playbook */}
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Recommended Playbook</h3>
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-                <p className="text-sm font-semibold text-slate-800 mb-3">{signal.playbookName}</p>
+            <div className="px-6 py-4" style={{ borderBottom: '1px solid #30363D' }}>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#00C853] mb-3">Recommended Playbook</p>
+              <div className="rounded p-4" style={{ background: '#0D1117', border: '1px solid #00C85330' }}>
+                <MonoValue className="text-xs text-[#F0F6FC] font-bold block mb-3">{signal.playbookName}</MonoValue>
                 <div className="space-y-2">
                   {signal.playbookSteps.map((step, i) => (
                     <div key={i} className="flex items-start gap-2.5">
-                      <span className="w-4 h-4 rounded-full bg-emerald-200 text-emerald-800 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
-                      <span className="text-xs text-slate-600 leading-snug">{step}</span>
+                      <span
+                        className="w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5 font-mono"
+                        style={{ background: '#00C85320', color: '#00C853', border: '1px solid #00C85340' }}
+                      >{i + 1}</span>
+                      <MonoValue className="text-[11px] text-[#8B949E] leading-snug">{step}</MonoValue>
                     </div>
                   ))}
                 </div>
@@ -465,70 +467,67 @@ function SignalModal({ signal, onClose, onAction }) {
 
             {/* Activity Log */}
             <div className="px-6 py-4">
-              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Activity Log</h3>
-              {playbookRun ? (
-                <div className="space-y-2">
+              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#00C853] mb-3">Activity Log</p>
+              <div className="space-y-2">
+                {playbookRun && (
                   <div className="flex items-start gap-2.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: '#00C853' }} />
                     <div>
-                      <p className="text-xs text-slate-600">Playbook "{signal.playbookName}" triggered</p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">Just now</p>
+                      <MonoValue className="text-[11px] text-[#F0F6FC] block">Playbook "{signal.playbookName}" triggered</MonoValue>
+                      <MonoValue className="text-[10px] text-[#8B949E]">Just now</MonoValue>
                     </div>
                   </div>
-                  {signal.activityLog.map((entry, i) => (
-                    <div key={i} className="flex items-start gap-2.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                      <div>
-                        <p className="text-xs text-slate-600">{entry.action}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{entry.date}</p>
-                      </div>
+                )}
+                {signal.activityLog.length > 0 ? signal.activityLog.map((entry, i) => (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: '#30363D' }} />
+                    <div>
+                      <MonoValue className="text-[11px] text-[#8B949E] block">{entry.action}</MonoValue>
+                      <MonoValue className="text-[10px] text-[#8B949E]/60">{entry.date}</MonoValue>
                     </div>
-                  ))}
-                </div>
-              ) : signal.activityLog.length > 0 ? (
-                <div className="space-y-2">
-                  {signal.activityLog.map((entry, i) => (
-                    <div key={i} className="flex items-start gap-2.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                      <div>
-                        <p className="text-xs text-slate-600">{entry.action}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{entry.date}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs text-slate-400 italic">No actions taken yet.</p>
-              )}
+                  </div>
+                )) : !playbookRun && (
+                  <MonoValue className="text-[11px] text-[#8B949E]/60 italic">No actions taken yet.</MonoValue>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Sticky bottom action bar */}
-          <div className="border-t border-slate-100 px-6 py-4 bg-white shrink-0">
+          <div className="px-6 py-4 shrink-0" style={{ borderTop: '1px solid #30363D', background: '#161B22' }}>
             {playbookRun ? (
-              <div className="flex items-center gap-2 text-emerald-700 text-sm font-medium">
+              <div className="flex items-center gap-2" style={{ color: '#00C853' }}>
                 <CheckCircle className="w-4 h-4" />
-                Playbook running — CSM notified, Salesforce task created
+                <MonoValue className="text-sm">Playbook running — CSM notified, Salesforce task created</MonoValue>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleRunPlaybook}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-mono font-semibold rounded transition-colors"
+                  style={{ background: '#00C853', color: '#0D1117' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#00A844'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#00C853'}
                 >
-                  <Play className="w-3.5 h-3.5 fill-current" /> Run Playbook
+                  <Play className="w-3.5 h-3.5 fill-current" /> RUN PLAYBOOK
                 </button>
                 <button
                   onClick={() => onAction(signal.id, 'call')}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-mono rounded transition-colors"
+                  style={{ background: 'transparent', border: '1px solid #30363D', color: '#8B949E' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#30363D'; e.currentTarget.style.color = '#F0F6FC'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#8B949E'; }}
                 >
-                  <Phone className="w-3.5 h-3.5" /> Schedule Call
+                  <Phone className="w-3.5 h-3.5" /> SCHEDULE CALL
                 </button>
                 <button
                   onClick={() => onAction(signal.id, 'snooze')}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-mono rounded transition-colors"
+                  style={{ background: 'transparent', border: '1px solid #30363D', color: '#8B949E' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#30363D'; e.currentTarget.style.color = '#F0F6FC'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#8B949E'; }}
                 >
-                  <BellOff className="w-3.5 h-3.5" /> Snooze 7d
+                  <BellOff className="w-3.5 h-3.5" /> SNOOZE 7D
                 </button>
               </div>
             )}
@@ -546,9 +545,7 @@ export default function SignalFeedView() {
   const [actionedIds, setActionedIds] = useState([]);
 
   const handleAction = (id, action) => {
-    if (action === 'playbook') {
-      setActionedIds(prev => [...prev, id]);
-    }
+    if (action === 'playbook') setActionedIds(prev => [...prev, id]);
   };
 
   const filtered = signals.filter(s => {
@@ -573,57 +570,46 @@ export default function SignalFeedView() {
   };
 
   const filterTabs = [
-    { id: 'all', label: `All (${counts.all})` },
-    { id: 'open', label: `Open (${counts.open})` },
-    { id: 'actioned', label: `Actioned (${counts.actioned})` },
-    { id: 'snoozed', label: `Snoozed (${counts.snoozed})` },
+    { id: 'all',      label: `ALL (${counts.all})` },
+    { id: 'open',     label: `OPEN (${counts.open})` },
+    { id: 'actioned', label: `ACTIONED (${counts.actioned})` },
+    { id: 'snoozed',  label: `SNOOZED (${counts.snoozed})` },
+  ];
+
+  const statTiles = [
+    { label: 'TOTAL SIGNALS', value: counts.all,      numColor: '#F0F6FC', topBorder: '#58A6FF' },
+    { label: 'OPEN',          value: counts.open,     numColor: '#FF9500', topBorder: '#FF9500' },
+    { label: 'ACTIONED',      value: counts.actioned, numColor: '#00C853', topBorder: '#00C853' },
+    { label: 'SNOOZED',       value: counts.snoozed,  numColor: '#8B949E', topBorder: '#8B949E' },
   ];
 
   return (
     <div className="h-full">
-      {/* Page header */}
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-900">Signals</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Customer adoption signals requiring action</p>
-        </div>
-        <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2">
-          <Search className="w-3.5 h-3.5 text-slate-400" />
-          <input
-            className="bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none w-44"
-            placeholder="Search signals..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* Summary stats */}
+      {/* Stats tiles */}
       <div className="grid grid-cols-4 gap-3 mb-5">
-        {[
-          { label: 'Total Signals', value: counts.all, color: 'text-[#0F172A]' },
-          { label: 'Open', value: counts.open, color: 'text-orange-500' },
-          { label: 'Actioned', value: counts.actioned, color: 'text-emerald-600' },
-          { label: 'Snoozed', value: counts.snoozed, color: 'text-slate-400' },
-        ].map(s => (
-          <div key={s.label} className="bg-white border border-slate-200 rounded-lg px-4 py-3">
-            <p className="text-[11px] text-slate-500 mb-0.5">{s.label}</p>
-            <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
+        {statTiles.map(t => (
+          <div
+            key={t.label}
+            className="rounded px-4 py-3"
+            style={{ background: '#1C2128', border: '1px solid #30363D', borderTop: `3px solid ${t.topBorder}` }}
+          >
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: '#8B949E' }}>{t.label}</p>
+            <p className="font-mono text-2xl font-bold" style={{ color: t.numColor }}>{t.value}</p>
           </div>
         ))}
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-1 mb-4 border-b border-slate-200">
+      <div className="flex gap-0 mb-4" style={{ borderBottom: '1px solid #30363D' }}>
         {filterTabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id)}
-            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
-              filter === tab.id
-                ? 'border-slate-900 text-slate-900'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
-            }`}
+            className="px-4 py-2 font-mono text-xs font-semibold transition-all border-b-2 -mb-px"
+            style={filter === tab.id
+              ? { color: '#00C853', borderBottomColor: '#00C853' }
+              : { color: '#8B949E', borderBottomColor: 'transparent' }
+            }
           >
             {tab.label}
           </button>
@@ -631,7 +617,7 @@ export default function SignalFeedView() {
       </div>
 
       {/* Signal rows */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <AnimatePresence>
           {filtered.map(signal => (
             <SignalRow
@@ -643,11 +629,12 @@ export default function SignalFeedView() {
           ))}
         </AnimatePresence>
         {filtered.length === 0 && (
-          <div className="text-center py-16 text-slate-400 text-sm">No signals match this filter</div>
+          <div className="text-center py-16 font-mono text-sm" style={{ color: '#8B949E' }}>
+            NO SIGNALS MATCH THIS FILTER
+          </div>
         )}
       </div>
 
-      {/* Signal modal */}
       {selectedSignal && (
         <SignalModal
           signal={selectedSignal}
