@@ -21,7 +21,7 @@ const subtitles = {
 
 export default function DemoHeader({ activeView }) {
   return (
-    <div className="h-14 shrink-0 flex items-center justify-between px-6 border-b border-border bg-card/80 backdrop-blur-sm">
+    <div className="h-14 shrink-0 flex items-center justify-between px-6 border-b border-slate-200 bg-white">
       <div>
         <h1 className="text-sm font-semibold text-foreground">{titles[activeView]}</h1>
         <p className="text-xs text-muted-foreground">{subtitles[activeView]}</p>
