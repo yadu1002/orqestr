@@ -63,20 +63,15 @@ export default function DemoSidebar({ activeView, onNavigate }) {
       {/* Logo + collapse toggle */}
       <div className="h-14 flex items-center px-3 shrink-0 border-b border-border">
         <div className={`flex items-center gap-2 flex-1 min-w-0 ${collapsed ? 'justify-center' : ''}`}>
-          <Zap className="w-4 h-4 shrink-0 fill-current text-primary" />
-          {!collapsed && (
-            <motion.span
-              initial={false}
-              animate={{ opacity: collapsed ? 0 : 1 }}
-              className="text-sm font-bold tracking-widest text-primary"
-            >
-              ORQESTR
-            </motion.span>
-          )}
-          {!collapsed && (
-            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full ml-1 bg-secondary text-muted-foreground border border-border">
-              DEMO
-            </span>
+          {collapsed ? (
+            <img src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/76d337b2b_OrqestrLogo.jpg" alt="Orqestr" className="h-8 w-8 object-contain rounded" />
+          ) : (
+            <>
+              <img src="https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/76d337b2b_OrqestrLogo.jpg" alt="Orqestr" className="h-9 w-auto object-contain" />
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full ml-1 bg-secondary text-muted-foreground border border-border">
+                DEMO
+              </span>
+            </>
           )}
         </div>
         {!collapsed && (
