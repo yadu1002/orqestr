@@ -21,11 +21,11 @@ export default function Demo() {
   };
 
   return (
-    <div className="h-screen flex overflow-hidden font-inter" style={{ background: '#0D1117', color: '#F0F6FC' }}>
+    <div className="h-screen flex overflow-hidden font-inter bg-background text-foreground">
       <DemoSidebar activeView={activeView} onNavigate={setActiveView} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <DemoHeader activeView={activeView} />
-        <main className="flex-1 overflow-y-auto p-6" style={{ background: '#0D1117' }}>
+        <main className="flex-1 overflow-y-auto p-6 bg-background">
           {views[activeView]}
         </main>
       </div>
