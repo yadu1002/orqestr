@@ -199,11 +199,11 @@ const signals = [
 ];
 
 const severityConfig = {
-  critical: { label: 'Critical', bolt: 'text-red-500', bar: 'bg-red-500' },
-  high: { bolt: 'text-orange-500', bar: 'bg-orange-400' },
-  medium: { bolt: 'text-yellow-500', bar: 'bg-yellow-400' },
-  low: { bolt: 'text-blue-400', bar: 'bg-blue-400' },
-  opportunity: { bolt: 'text-emerald-500', bar: 'bg-emerald-500' },
+  critical: { label: 'Critical', bolt: 'text-red-500', bar: 'bg-red-500', leftBorder: 'border-l-red-500' },
+  high: { bolt: 'text-orange-500', bar: 'bg-orange-400', leftBorder: 'border-l-orange-400' },
+  medium: { bolt: 'text-yellow-500', bar: 'bg-yellow-400', leftBorder: 'border-l-yellow-400' },
+  low: { bolt: 'text-blue-400', bar: 'bg-blue-400', leftBorder: 'border-l-blue-300' },
+  opportunity: { bolt: 'text-emerald-500', bar: 'bg-emerald-500', leftBorder: 'border-l-emerald-500' },
 };
 
 const statusConfig = {
@@ -239,7 +239,7 @@ function SignalRow({ signal, onClick, onAction }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -16 }}
       onClick={() => onClick(signal)}
-      className="bg-white border border-slate-200 rounded-lg px-5 py-4 cursor-pointer hover:border-slate-300 hover:shadow-sm transition-all group"
+      className={`bg-white border border-slate-200 border-l-4 ${sev.leftBorder} rounded-lg px-5 py-4 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group`}
     >
       <div className="flex items-start gap-4">
         {/* Severity bolt */}
@@ -591,14 +591,14 @@ export default function SignalFeedView() {
       {/* Summary stats */}
       <div className="grid grid-cols-4 gap-3 mb-5">
         {[
-          { label: 'Total Signals', value: counts.all, color: 'text-slate-800' },
-          { label: 'Open', value: counts.open, color: 'text-blue-700' },
-          { label: 'Actioned', value: counts.actioned, color: 'text-emerald-700' },
-          { label: 'Snoozed', value: counts.snoozed, color: 'text-slate-500' },
+          { label: 'Total Signals', value: counts.all, color: 'text-[#0F172A]' },
+          { label: 'Open', value: counts.open, color: 'text-orange-500' },
+          { label: 'Actioned', value: counts.actioned, color: 'text-emerald-600' },
+          { label: 'Snoozed', value: counts.snoozed, color: 'text-slate-400' },
         ].map(s => (
-          <div key={s.label} className="bg-white border border-slate-200 rounded-lg p-4">
-            <p className="text-xs text-slate-500 mb-1">{s.label}</p>
-            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+          <div key={s.label} className="bg-white border border-slate-200 rounded-lg px-4 py-3">
+            <p className="text-[11px] text-slate-500 mb-0.5">{s.label}</p>
+            <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
