@@ -13,7 +13,6 @@ export default function Footer() {
           />
         </div>
         <p className="text-sm text-muted-foreground">© 2026 Orqestr. All rights reserved.</p>
-        <div />
       </div>
     </footer>
   );
