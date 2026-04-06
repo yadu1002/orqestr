@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Mail, X, CheckCircle, Calendar, User, DollarSign, Package, Play, BellOff } from 'lucide-react';
-import GaugeCard from './GaugeCard';
 
 const signals = [
   {
@@ -374,11 +373,11 @@ export default function SignalFeedView() {
     return true;
   });
 
-  const gauges = [
-    { label: 'Total Signals', value: counts.all,      pct: Math.round((counts.all / 10) * 100),      accentColor: '#3b82f6', topColor: '#3b82f6' },
-    { label: 'Open',          value: counts.open,     pct: Math.round((counts.open / counts.all) * 100),    accentColor: '#f97316', topColor: '#f97316' },
-    { label: 'Actioned',      value: counts.actioned, pct: Math.round((counts.actioned / counts.all) * 100), accentColor: '#16a34a', topColor: '#16a34a' },
-    { label: 'Snoozed',       value: counts.snoozed,  pct: Math.round((counts.snoozed / counts.all) * 100),  accentColor: '#9ca3af', topColor: '#9ca3af' },
+  const statTiles = [
+    { label: 'TOTAL SIGNALS', value: counts.all,      numColor: '#1d4ed8', topColor: '#3b82f6' },
+    { label: 'OPEN',          value: counts.open,     numColor: '#ea580c', topColor: '#f97316' },
+    { label: 'ACTIONED',      value: counts.actioned, numColor: '#15803d', topColor: '#16a34a' },
+    { label: 'SNOOZED',       value: counts.snoozed,  numColor: '#6b7280', topColor: '#9ca3af' },
   ];
 
   const filterTabs = [
@@ -390,9 +389,14 @@ export default function SignalFeedView() {
 
   return (
     <div className="h-full">
-      {/* Stats gauges */}
+      {/* Stats tiles */}
       <div className="grid grid-cols-4 gap-3 mb-5">
-        {gauges.map(g => <GaugeCard key={g.label} {...g} />)}
+        {statTiles.map(t => (
+          <div key={t.label} style={{ background: '#F8F9FA', border: '1px solid #E5E7EB', borderTop: `3px solid ${t.topColor}`, borderRadius: 8, padding: 20 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 8 }}>{t.label}</p>
+            <p style={{ fontSize: 28, fontWeight: 700, color: t.numColor, lineHeight: 1 }}>{t.value}</p>
+          </div>
+        ))}
       </div>
 
       {/* Filter tabs */}
