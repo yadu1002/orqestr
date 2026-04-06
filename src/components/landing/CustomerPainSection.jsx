@@ -4,17 +4,17 @@ import { motion } from 'framer-motion';
 const quotes = [
   {
     text: "By the time I'm getting around to talking to customers, the damage is already being done. All my work is reactive.",
-    attribution: "— Director, Cloud Advisory · Fortune 500 Enterprise SaaS",
+    attribution: "— Head of Cloud Adoption · Fortune 500 Enterprise SaaS",
     tag: "CHURN SIGNAL GAP",
   },
   {
     text: "The dashboard is retrospective. It's not predictive. How do we make recommendations before the problem starts?",
-    attribution: "— Director, Cloud Advisory · Fortune 500 Enterprise SaaS",
+    attribution: "— Customer Engagement & Services Delivery Director · Fortune 500 Enterprise SaaS",
     tag: "RETROSPECTIVE DATA",
   },
   {
     text: "I could put three project managers on this and just scratch the surface sending 30 emails a day. The small accounts add up to a third of our problem.",
-    attribution: "— Director, Cloud Advisory · Fortune 500 Enterprise SaaS",
+    attribution: "— Customer Success Manager · Fortune 500 Enterprise SaaS",
     tag: "MANUAL SCALING FAILURE",
   },
 ];
