@@ -374,10 +374,10 @@ export default function SignalFeedView() {
   });
 
   const statTiles = [
-    { label: 'Total Signals', value: counts.all,      valueClass: 'text-foreground',   accent: 'border-t-blue-400' },
-    { label: 'Open',          value: counts.open,     valueClass: 'text-orange-600',   accent: 'border-t-orange-400' },
-    { label: 'Actioned',      value: counts.actioned, valueClass: 'text-primary',      accent: 'border-t-primary' },
-    { label: 'Snoozed',       value: counts.snoozed,  valueClass: 'text-muted-foreground', accent: 'border-t-border' },
+    { label: 'TOTAL SIGNALS', value: counts.all,      numColor: '#1d4ed8', topColor: '#3b82f6' },
+    { label: 'OPEN',          value: counts.open,     numColor: '#ea580c', topColor: '#f97316' },
+    { label: 'ACTIONED',      value: counts.actioned, numColor: '#15803d', topColor: '#16a34a' },
+    { label: 'SNOOZED',       value: counts.snoozed,  numColor: '#6b7280', topColor: '#9ca3af' },
   ];
 
   const filterTabs = [
@@ -392,9 +392,9 @@ export default function SignalFeedView() {
       {/* Stats tiles */}
       <div className="grid grid-cols-4 gap-3 mb-5">
         {statTiles.map(t => (
-          <div key={t.label} className={`rounded-lg px-4 py-3 bg-white border border-border border-t-2 ${t.accent}`}>
-            <p className="text-[10px] font-semibold uppercase tracking-widest mb-1 text-muted-foreground">{t.label}</p>
-            <p className={`text-2xl font-bold ${t.valueClass}`}>{t.value}</p>
+          <div key={t.label} style={{ background: '#F8F9FA', border: '1px solid #E5E7EB', borderTop: `3px solid ${t.topColor}`, borderRadius: 8, padding: 20 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 8 }}>{t.label}</p>
+            <p style={{ fontSize: 28, fontWeight: 700, color: t.numColor, lineHeight: 1 }}>{t.value}</p>
           </div>
         ))}
       </div>

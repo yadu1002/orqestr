@@ -45,39 +45,45 @@ export default function AccountsView() {
   const totalArr = accounts.reduce((s, a) => s + a.arr, 0);
   const atRiskArr = accounts.filter(a => a.health < 50).reduce((s, a) => s + a.arr, 0);
 
+  const statCards = [
+    { label: 'TOTAL ACCOUNTS', value: accounts.length,                        numColor: '#1d4ed8', topColor: '#3b82f6' },
+    { label: 'AT-RISK ACCOUNTS', value: atRisk,                               numColor: '#ea580c', topColor: '#f97316' },
+    { label: 'TOTAL ARR',  value: `$${(totalArr / 1000).toFixed(0)}k`,        numColor: '#1d4ed8', topColor: '#3b82f6' },
+    { label: 'AT-RISK ARR', value: `$${(atRiskArr / 1000).toFixed(0)}k`,      numColor: '#ea580c', topColor: '#f97316' },
+  ];
+
   return (
     <div>
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        {[
-          { label: 'Total Accounts', value: accounts.length, color: 'text-foreground' },
-          { label: 'At-Risk Accounts', value: atRisk, color: 'text-red-600' },
-          { label: 'Total ARR', value: `$${(totalArr / 1000).toFixed(0)}k`, color: 'text-foreground' },
-          { label: 'At-Risk ARR', value: `$${(atRiskArr / 1000).toFixed(0)}k`, color: 'text-orange-600' },
-        ].map(stat => (
-          <div key={stat.label} className="rounded-2xl bg-card border border-border p-4 shadow-sm">
-            <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
-            <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+      <div className="grid grid-cols-4 gap-3 mb-6">
+        {statCards.map(t => (
+          <div key={t.label} style={{ background: '#F8F9FA', border: '1px solid #E5E7EB', borderTop: `3px solid ${t.topColor}`, borderRadius: 8, padding: 20 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 8 }}>{t.label}</p>
+            <p style={{ fontSize: 28, fontWeight: 700, color: t.numColor, lineHeight: 1 }}>{t.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-        <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3 border-b border-border bg-secondary/60">
+      <div className="rounded-lg border border-border bg-white overflow-hidden">
+        <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3 border-b border-border bg-white">
           {[
-            { label: 'Account', sort: null },
+            { label: 'ACCOUNT', sort: null },
             { label: 'ARR', sort: 'arr' },
-            { label: 'Health', sort: 'health_asc' },
+            { label: 'HEALTH', sort: 'health_asc' },
             { label: 'CSM', sort: null },
-            { label: 'Renewal', sort: null },
-            { label: 'Signals', sort: 'signals' },
-            { label: 'Last Active', sort: null },
+            { label: 'RENEWAL', sort: null },
+            { label: 'SIGNALS', sort: 'signals' },
+            { label: 'LAST ACTIVE', sort: null },
           ].map(col => (
             <button
               key={col.label}
               onClick={() => col.sort && setSort(col.sort)}
-              className={`text-left text-[10px] font-semibold uppercase tracking-wider ${col.sort ? 'hover:text-foreground cursor-pointer' : 'cursor-default'} ${sort === col.sort ? 'text-primary' : 'text-muted-foreground'}`}
+              className={`text-left flex items-center gap-1 text-[10px] font-bold tracking-wider ${col.sort ? 'cursor-pointer' : 'cursor-default'}`}
+              style={{ color: '#374151' }}
             >
               {col.label}
+              {col.sort && (
+                <span style={{ color: sort === col.sort ? '#3b82f6' : '#9ca3af', fontSize: 9 }}>▲▼</span>
+              )}
             </button>
           ))}
         </div>
@@ -88,7 +94,7 @@ export default function AccountsView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: i * 0.04 }}
-            className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3.5 border-b border-border hover:bg-secondary/30 transition-colors last:border-0"
+            className="grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3.5 border-b border-border hover:bg-gray-50 transition-colors last:border-0"
           >
             <div>
               <p className="text-sm font-medium text-foreground">{account.company}</p>
