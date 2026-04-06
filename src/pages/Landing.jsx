@@ -28,7 +28,6 @@ export default function Landing() {
         <div id="hero">
           <HeroSection onWaitlistClick={scrollToWaitlist} />
         </div>
-        <SocialProofBar />
         <div id="problem">
           <ProblemSection />
         </div>
