@@ -1,8 +1,9 @@
 import React from 'react';
 
-const GAP_DEG = 150;
-const ARC_DEG = 360 - GAP_DEG;
-const START_DEG = 90 + GAP_DEG / 2;
+const GREEN = '#16a34a';
+const GAP_DEG = 140;
+const ARC_DEG = 360 - GAP_DEG; // 220
+const START_DEG = 90 + GAP_DEG / 2; // 160
 
 const toRad = (d) => (d * Math.PI) / 180;
 const polarX = (cx, angle, r) => cx + r * Math.cos(toRad(angle));
@@ -15,74 +16,42 @@ function describeArc(cx, cy, r, startAngle, endAngle) {
   return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
 }
 
-export default function GaugeCard({ label, value, pct, accentColor, topColor, subLabel }) {
-  const size = 130;
+// pct: 0-100 value to show on gauge
+// If pct is null/undefined, show raw `value` text instead of a gauge
+export default function GaugeCard({ label, value, pct, accentColor, topColor }) {
+  const size = 110;
   const cx = size / 2;
   const cy = size / 2;
-  const r = 46;
+  const r = 40;
 
-  const safePct = Math.min(Math.max(pct ?? 0, 2), 100);
-  const fillEnd = START_DEG - (safePct / 100) * ARC_DEG;
+  const fillEnd = START_DEG - (Math.min(pct ?? 0, 100) / 100) * ARC_DEG;
   const trackPath = describeArc(cx, cy, r, START_DEG, START_DEG - ARC_DEG);
   const fillPath = pct != null ? describeArc(cx, cy, r, START_DEG, fillEnd) : null;
 
-  const strokeColor = accentColor || '#16a34a';
+  const strokeColor = accentColor || GREEN;
   const borderTopColor = topColor || strokeColor;
 
   return (
     <div style={{
-      background: '#ffffff',
+      background: '#F8F9FA',
       border: '1px solid #E5E7EB',
-      borderTop: `4px solid ${borderTopColor}`,
-      borderRadius: 12,
-      padding: '20px 16px 16px',
+      borderTop: `3px solid ${borderTopColor}`,
+      borderRadius: 8,
+      padding: '16px 12px',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-      gap: 0,
     }}>
-      {/* Label */}
-      <p style={{
-        fontSize: 10,
-        fontWeight: 700,
-        letterSpacing: '0.09em',
-        textTransform: 'uppercase',
-        color: '#6B7280',
-        marginBottom: 12,
-        textAlign: 'center',
-        lineHeight: 1.4,
-      }}>{label}</p>
-
-      {/* Gauge */}
-      <div style={{ position: 'relative', width: size, height: Math.round(size * 0.72) }}>
+      <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 10, textAlign: 'center' }}>{label}</p>
+      <div style={{ position: 'relative', width: size, height: size * 0.76 }}>
         <svg width={size} height={size} style={{ overflow: 'visible', position: 'absolute', top: 0, left: 0 }}>
-          {/* Shadow/glow on track */}
-          <path d={trackPath} fill="none" stroke="#F3F4F6" strokeWidth="12" strokeLinecap="round" />
-          <path d={trackPath} fill="none" stroke="#E5E7EB" strokeWidth="10" strokeLinecap="round" />
-          {fillPath && (
-            <path d={fillPath} fill="none" stroke={strokeColor} strokeWidth="10" strokeLinecap="round"
-              style={{ filter: `drop-shadow(0 0 4px ${strokeColor}55)` }} />
-          )}
+          <path d={trackPath} fill="none" stroke="#E5E7EB" strokeWidth="9" strokeLinecap="round" />
+          {fillPath && <path d={fillPath} fill="none" stroke={strokeColor} strokeWidth="9" strokeLinecap="round" />}
         </svg>
-        {/* Value centered in gauge */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          paddingBottom: 4,
-        }}>
-          <span style={{ fontSize: 22, fontWeight: 800, color: '#111827', lineHeight: 1 }}>{value}</span>
-          {subLabel && (
-            <span style={{ fontSize: 9, fontWeight: 600, color: '#9CA3AF', marginTop: 3, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{subLabel}</span>
-          )}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: 20, fontWeight: 700, color: '#111827' }}>{value}</span>
         </div>
       </div>
-
-      {/* Percentage indicator */}
-      {pct != null && (
-        <p style={{ fontSize: 10, fontWeight: 600, color: strokeColor, marginTop: 4 }}>{pct}%</p>
-      )}
     </div>
   );
 }
