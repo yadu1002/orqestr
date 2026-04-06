@@ -5,23 +5,19 @@ import { Plus, Minus } from 'lucide-react';
 const faqs = [
   {
     q: "How is Orqestr different from Gainsight or ChurnZero?",
-    a: "Gainsight and ChurnZero are full customer success platforms that require months to implement and significant ongoing admin. Orqestr is not a replacement — it is an orchestration layer that sits on top of your existing tools, including Gainsight, and turns the signals already in your stack into automated action. Setup takes days, not months."
+    a: "Gainsight and ChurnZero are full CS platforms that take months to implement and require dedicated admins. Orqestr is not a replacement — it is the coordination layer that sits on top of whatever you already have. If Gainsight is your system of record, Orqestr reads from it and turns its signals into automated cross-team action. Gainsight tells you a customer is at risk. Orqestr is what actually does something about it — automatically, across every team that needs to be involved, in seconds."
   },
   {
-    q: "What integrations does Orqestr support?",
-    a: "In our initial release we connect to Salesforce, HubSpot, Segment, Amplitude, Gainsight, Slack, and Zendesk. We are adding new integrations every sprint based on waitlist feedback."
+    q: "Why not just build this internally or use Zapier?",
+    a: "Zapier connects apps. Orqestr understands customers. No Zapier workflow knows that a $95k ARR account with a 23-point health score drop and a renewal in 32 days needs to be escalated immediately with a specific playbook. Internal builds take 6 to 9 months and still miss the cross-team coordination layer. Orqestr is live in 48 hours with pre-built playbooks, signal normalization, and entity resolution included from day one."
   },
   {
-    q: "How long does it take to get value from Orqestr?",
-    a: "Most teams see their first automated playbook trigger within 48 hours of connecting their first integration. There is no implementation project, no professional services engagement, and no data team required."
+    q: "Why are two students the right people to build this?",
+    a: "Uday spent time inside SAP as a Cloud Adoption Advisor working with 100+ enterprise accounts — building the dashboards that were supposed to surface customer risk and watching firsthand as those signals went unacted on because no coordination system existed. Abner brings a computer science background in systems design and has built production software from the ground up. We did not theorize this problem. We lived it from inside one of the largest enterprise SaaS companies in the world."
   },
   {
-    q: "Do we need to replace our current CS platform?",
-    a: "No. Orqestr is designed to work alongside Gainsight, ChurnZero, Vitally, and any other CS platform you already use. It reads signals from those tools and adds the coordination layer on top."
-  },
-  {
-    q: "How do we join the early access program?",
-    a: "Fill out the waitlist form below. We are onboarding a small group of teams in our first cohort and will reach out within 48 hours of your submission."
+    q: "How is this different from AI features being added to Salesforce or Gainsight?",
+    a: "What Gainsight and Salesforce are building is smarter reporting — better health scores, better predictions, better dashboards. What they are not building is the operational layer that takes those predictions and executes across CS, Sales, and Support simultaneously. An AI health score a CSM still has to manually read and act on is still a dashboard problem. Orqestr is the system that acts on the signal — not the system that surfaces it."
   }
 ];
 
