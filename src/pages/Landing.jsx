@@ -47,8 +47,7 @@ export default function Landing() {
         <FAQSection />
         <div id="waitlist" className="scroll-mt-20">
           <div className="max-w-3xl mx-auto px-6 pt-12">
-            <WaitlistIntro />
-          </div>
+            </div>
           <WaitlistForm />
         </div>
         <Footer />
