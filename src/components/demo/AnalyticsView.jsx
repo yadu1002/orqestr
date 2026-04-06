@@ -1,44 +1,57 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import {
+  AreaChart, Area, BarChart, Bar, LineChart, Line,
+  PieChart, Pie, Cell, Legend,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
+} from 'recharts';
 
-const signalTrend = [
-  { month: 'Nov', churn: 8, expansion: 3, feature: 5 },
-  { month: 'Dec', churn: 11, expansion: 4, feature: 7 },
-  { month: 'Jan', churn: 14, expansion: 5, feature: 9 },
-  { month: 'Feb', churn: 9, expansion: 7, feature: 6 },
-  { month: 'Mar', churn: 12, expansion: 8, feature: 11 },
-  { month: 'Apr', churn: 7, expansion: 6, feature: 8 },
+// ─── Mock Data ────────────────────────────────────────────────────────────────
+
+const dailySignals = [
+  { day: 'Mar 8', total: 4, actioned: 2 }, { day: 'Mar 9', total: 6, actioned: 4 },
+  { day: 'Mar 10', total: 3, actioned: 2 }, { day: 'Mar 11', total: 7, actioned: 5 },
+  { day: 'Mar 12', total: 5, actioned: 3 }, { day: 'Mar 13', total: 8, actioned: 6 },
+  { day: 'Mar 14', total: 4, actioned: 3 }, { day: 'Mar 15', total: 9, actioned: 7 },
+  { day: 'Mar 16', total: 6, actioned: 4 }, { day: 'Mar 17', total: 11, actioned: 8 },
+  { day: 'Mar 18', total: 7, actioned: 5 }, { day: 'Mar 19', total: 5, actioned: 4 },
+  { day: 'Mar 20', total: 8, actioned: 6 }, { day: 'Mar 21', total: 10, actioned: 8 },
+  { day: 'Mar 22', total: 6, actioned: 5 }, { day: 'Mar 23', total: 7, actioned: 6 },
+  { day: 'Mar 24', total: 12, actioned: 9 }, { day: 'Mar 25', total: 9, actioned: 7 },
+  { day: 'Mar 26', total: 5, actioned: 4 }, { day: 'Mar 27', total: 8, actioned: 6 },
+  { day: 'Mar 28', total: 11, actioned: 9 }, { day: 'Mar 29', total: 7, actioned: 6 },
+  { day: 'Mar 30', total: 9, actioned: 7 }, { day: 'Mar 31', total: 13, actioned: 10 },
+  { day: 'Apr 1', total: 8, actioned: 6 }, { day: 'Apr 2', total: 10, actioned: 8 },
+  { day: 'Apr 3', total: 7, actioned: 6 }, { day: 'Apr 4', total: 12, actioned: 10 },
+  { day: 'Apr 5', total: 9, actioned: 8 }, { day: 'Apr 6', total: 6, actioned: 5 },
 ];
 
-const timeToAction = [
-  { week: 'W1', before: 4.2, after: 0.6 },
-  { week: 'W2', before: 3.8, after: 0.5 },
-  { week: 'W3', before: 5.1, after: 0.7 },
-  { week: 'W4', before: 4.4, after: 0.4 },
-  { week: 'W5', before: 3.9, after: 0.6 },
-  { week: 'W6', before: 4.7, after: 0.5 },
+const playbookPerf = [
+  { name: 'Support Escalation', rate: 89 },
+  { name: 'Re-Engagement', rate: 81 },
+  { name: 'Feature Adoption', rate: 72 },
+  { name: 'Expansion', rate: 76 },
+  { name: 'Renewal Risk', rate: 64 },
 ];
 
-const playbookPerformance = [
-  { name: 'Feature Adoption', fired: 34, completed: 28, rate: 82 },
-  { name: 'Churn Risk', fired: 19, completed: 14, rate: 73 },
-  { name: 'Renewal Risk', fired: 11, completed: 9, rate: 91 },
-  { name: 'Expansion', fired: 8, completed: 6, rate: 75 },
+const signalDist = [
+  { name: 'Low Adoption', value: 34, color: '#f97316' },
+  { name: 'Renewal Risk', value: 21, color: '#ef4444' },
+  { name: 'Re-Engagement', value: 18, color: '#eab308' },
+  { name: 'Support Escalation', value: 14, color: '#8b5cf6' },
+  { name: 'Expansion', value: 13, color: '#16a34a' },
 ];
 
-const kpiStats = [
-  { label: 'MEAN TIME TO ACTION', value: '0.5 days', sub: 'Down from 4.2 days', trend: '↓ 88%', numColor: '#15803d', topColor: '#16a34a' },
-  { label: 'SIGNALS DETECTED (30D)', value: '72', sub: 'Across 6 signal types', trend: '↑ 24%', numColor: '#1d4ed8', topColor: '#3b82f6' },
-  { label: 'PLAYBOOK COMPLETION', value: '84%', sub: 'Avg across all playbooks', trend: '↑ 11%', numColor: '#1d4ed8', topColor: '#3b82f6' },
-  { label: 'ARR PROTECTED', value: '$340k', sub: 'From churn prevention', trend: 'This quarter', numColor: '#15803d', topColor: '#16a34a' },
+const atRiskAccounts = [
+  { company: 'Globex Industries', arr: '$120k', health: 24, daysToRenewal: 28, signals: 3 },
+  { company: 'Stripe Inc',        arr: '$148k', health: 29, daysToRenewal: 18, signals: 2 },
+  { company: 'ScaleUp AI',        arr: '$95k',  health: 31, daysToRenewal: 31, signals: 2 },
+  { company: 'Acme Corp',         arr: '$84k',  health: 38, daysToRenewal: 99, signals: 2 },
 ];
 
-const donuts = [
-  { label: 'Feature Adoption Rate', pct: 72 },
-  { label: 'Playbook Completion Rate', pct: 68 },
-  { label: 'At-Risk Account Ratio', pct: 35 },
-  { label: 'Expansion Coverage', pct: 24 },
+const kpiTiles = [
+  { label: 'AVG TIME TO ACTION', value: '4.2 hours', sub: 'Down 38% from last month', trend: '↓ 38%', numColor: '#15803d', topColor: '#16a34a' },
+  { label: 'PLAYBOOK COMPLETION RATE', value: '68%', sub: 'Up 12% from last month', trend: '↑ 12%', numColor: '#15803d', topColor: '#16a34a' },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -47,33 +60,35 @@ const CustomTooltip = ({ active, payload, label }) => {
     <div className="bg-white border border-border rounded-lg px-3 py-2 text-xs shadow-lg">
       <p className="text-muted-foreground mb-1">{label}</p>
       {payload.map(p => (
-        <p key={p.dataKey} style={{ color: p.color }}>{p.name}: {p.value}</p>
+        <p key={p.dataKey} style={{ color: p.color }}>{p.name}: {p.value}{p.name?.includes('Rate') ? '%' : ''}</p>
       ))}
     </div>
   );
 };
 
-function DonutChart({ pct, label }) {
-  const r = 44;
-  const circ = 2 * Math.PI * r;
-  const dash = (pct / 100) * circ;
-  const GREEN = '#16a34a';
-
+function DonutChart({ data }) {
   return (
-    <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 8, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <p style={{ fontSize: 12, fontWeight: 500, color: '#374151', marginBottom: 14, textAlign: 'center' }}>{label}</p>
-      <div style={{ position: 'relative', width: 110, height: 110 }}>
-        <svg width="110" height="110" style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx="55" cy="55" r={r} fill="none" stroke="#E5E7EB" strokeWidth="11" />
-          <circle
-            cx="55" cy="55" r={r} fill="none"
-            stroke={GREEN} strokeWidth="11"
-            strokeDasharray={`${dash} ${circ}`}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 22, fontWeight: 700, color: '#111827' }}>{pct} %</span>
+    <div className="rounded-lg bg-white border border-border p-5">
+      <p className="text-sm font-semibold text-foreground mb-1">Signal Distribution</p>
+      <p className="text-xs text-muted-foreground mb-3">By signal type — last 30 days</p>
+      <div className="flex items-center gap-4">
+        <ResponsiveContainer width={160} height={160}>
+          <PieChart>
+            <Pie data={data} cx="50%" cy="50%" innerRadius={45} outerRadius={72} paddingAngle={2} dataKey="value">
+              {data.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <div className="space-y-2 flex-1">
+          {data.map(d => (
+            <div key={d.name} className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: d.color }} />
+                <span className="text-[10px] text-muted-foreground">{d.name}</span>
+              </div>
+              <span className="text-[10px] font-semibold text-foreground">{d.value}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -83,104 +98,89 @@ function DonutChart({ pct, label }) {
 export default function AnalyticsView() {
   return (
     <div className="space-y-5">
-      {/* KPI stat cards */}
-      <div className="grid grid-cols-4 gap-3">
-        {kpiStats.map(t => (
+      {/* Row 1: KPI tiles */}
+      <div className="grid grid-cols-2 gap-3">
+        {kpiTiles.map(t => (
           <div key={t.label} style={{ background: '#F8F9FA', border: '1px solid #E5E7EB', borderTop: `3px solid ${t.topColor}`, borderRadius: 8, padding: 20 }}>
             <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 8 }}>{t.label}</p>
-            <p style={{ fontSize: 26, fontWeight: 700, color: t.numColor, lineHeight: 1 }}>{t.value}</p>
+            <p style={{ fontSize: 28, fontWeight: 700, color: t.numColor, lineHeight: 1 }}>{t.value}</p>
             <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 10, color: '#6b7280' }}>{t.sub}</span>
-              <span style={{ fontSize: 10, fontWeight: 600, color: t.numColor }}>{t.trend}</span>
+              <span style={{ fontSize: 11, color: '#6b7280' }}>{t.sub}</span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#15803d' }}>{t.trend}</span>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Donut charts row */}
-      <div className="grid grid-cols-4 gap-3">
-        {donuts.map(d => <DonutChart key={d.label} {...d} />)}
+      {/* Row 2: Line chart — Signal Volume */}
+      <div className="rounded-lg bg-white border border-border p-5">
+        <p className="text-sm font-semibold text-foreground mb-1">Signal Volume — Last 30 Days</p>
+        <p className="text-xs text-muted-foreground mb-4">Daily signal detections vs actioned</p>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={dailySignals}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <XAxis dataKey="day" tick={{ fill: '#9ca3af', fontSize: 10 }} axisLine={false} tickLine={false}
+              tickFormatter={(v, i) => i % 5 === 0 ? v : ''} />
+            <YAxis tick={{ fill: '#9ca3af', fontSize: 10 }} axisLine={false} tickLine={false} />
+            <Tooltip content={<CustomTooltip />} />
+            <Line type="monotone" dataKey="total" name="Total Signals" stroke="#4ade80" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="actioned" name="Actioned" stroke="#15803d" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
-      {/* Charts row */}
+      {/* Row 3: Bar chart + Donut */}
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-lg bg-white border border-border p-5">
-          <p className="text-sm font-semibold text-foreground mb-1">Signal Volume by Type</p>
-          <p className="text-xs text-muted-foreground mb-4">Monthly detection trends</p>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={signalTrend}>
-              <defs>
-                <linearGradient id="churnGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="expGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#16a34a" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#16a34a" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="featGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-              <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
+          <p className="text-sm font-semibold text-foreground mb-1">Playbook Performance</p>
+          <p className="text-xs text-muted-foreground mb-4">Completion rate % by playbook type</p>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={playbookPerf} layout="vertical" barSize={14}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" horizontal={false} />
+              <XAxis type="number" domain={[0, 100]} tick={{ fill: '#9ca3af', fontSize: 10 }} axisLine={false} tickLine={false} unit="%" />
+              <YAxis type="category" dataKey="name" tick={{ fill: '#374151', fontSize: 10 }} axisLine={false} tickLine={false} width={120} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="churn" name="Churn Risk" stroke="#ef4444" fill="url(#churnGrad)" strokeWidth={2} />
-              <Area type="monotone" dataKey="expansion" name="Expansion" stroke="#16a34a" fill="url(#expGrad)" strokeWidth={2} />
-              <Area type="monotone" dataKey="feature" name="Feature Gap" stroke="#f59e0b" fill="url(#featGrad)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="rounded-lg bg-white border border-border p-5">
-          <p className="text-sm font-semibold text-foreground mb-1">Mean Time to Action</p>
-          <p className="text-xs text-muted-foreground mb-4">Days from signal to response (before vs. after Orqestr)</p>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={timeToAction} barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-              <XAxis dataKey="week" tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} unit="d" />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="before" name="Before" fill="rgba(239,68,68,0.4)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="after" name="After Orqestr" fill="#16a34a" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="rate" name="Completion Rate" fill="#16a34a" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
+        <DonutChart data={signalDist} />
       </div>
 
-      {/* Playbook performance table */}
+      {/* Row 4: At-Risk Accounts Table */}
       <div className="rounded-lg bg-white border border-border overflow-hidden">
         <div className="px-5 py-4 border-b border-border">
-          <p className="text-sm font-semibold text-foreground">Playbook Performance</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Last 30 days</p>
+          <p className="text-sm font-semibold text-foreground">Top At-Risk Accounts This Month</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Sorted by risk — health score + renewal proximity</p>
         </div>
-        <div className="grid grid-cols-[2fr_1fr_1fr_2fr] gap-4 px-5 py-2.5 border-b border-border bg-white">
-          {['PLAYBOOK', 'FIRED', 'COMPLETION', 'PROGRESS'].map(h => (
+        <div className="grid grid-cols-5 gap-4 px-5 py-2.5 border-b border-border bg-white">
+          {['ACCOUNT', 'ARR', 'HEALTH SCORE', 'DAYS TO RENEWAL', 'OPEN SIGNALS'].map(h => (
             <p key={h} style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: '#374151' }}>{h}</p>
           ))}
         </div>
         <div className="divide-y divide-border">
-          {playbookPerformance.map((pb, i) => (
-            <motion.div
-              key={pb.name}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.06 }}
-              className="grid grid-cols-[2fr_1fr_1fr_2fr] gap-4 px-5 py-3.5 items-center hover:bg-gray-50 transition-colors"
-            >
-              <p className="text-sm text-foreground">{pb.name}</p>
-              <p className="text-sm text-muted-foreground">{pb.fired}</p>
-              <p className="text-sm font-semibold" style={{ color: '#15803d' }}>{pb.rate}%</p>
-              <div className="flex items-center gap-2">
-                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: '#E5E7EB' }}>
-                  <div className="h-full rounded-full" style={{ width: `${pb.rate}%`, background: '#3b82f6' }} />
+          {atRiskAccounts.map((acc, i) => {
+            const hColor = acc.health >= 70 ? '#15803d' : acc.health >= 40 ? '#f97316' : '#ef4444';
+            return (
+              <motion.div key={acc.company} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.06 }}
+                className="grid grid-cols-5 gap-4 px-5 py-3.5 items-center hover:bg-gray-50 transition-colors">
+                <p className="text-sm font-medium text-foreground">{acc.company}</p>
+                <p className="text-sm text-muted-foreground">{acc.arr}</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-12 h-1.5 rounded-full overflow-hidden bg-secondary">
+                    <div className="h-full rounded-full" style={{ width: `${acc.health}%`, background: hColor }} />
+                  </div>
+                  <span className="text-xs font-bold" style={{ color: hColor }}>{acc.health}</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground">{pb.completed}/{pb.fired}</span>
-              </div>
-            </motion.div>
-          ))}
+                <p className="text-sm font-semibold" style={{ color: acc.daysToRenewal < 30 ? '#ef4444' : '#374151' }}>
+                  {acc.daysToRenewal}d
+                </p>
+                <span className="text-xs font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 w-fit">
+                  {acc.signals} open
+                </span>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>

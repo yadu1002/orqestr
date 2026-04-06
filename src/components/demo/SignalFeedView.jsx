@@ -1,8 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Mail, X, CheckCircle, Calendar, User, DollarSign, Package, Play, BellOff } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
-const signals = [
+// ─── Data ───────────────────────────────────────────────────────────────────
+
+const LIVE_SIGNAL = {
+  id: 'SIG-LIVE', company: 'Stripe Inc', signalType: 'Renewal Risk', severity: 'critical', status: 'open',
+  description: 'Health score dropped 31 points — renewal in 18 days. No QBR scheduled.',
+  csm: 'Sarah Chen', timestamp: 'Just now', arr: '$148,000', renewal: 'Apr 24, 2026', health: 29,
+  plan: 'Enterprise', feature: 'Full Platform', activationDate: 'Apr 24, 2025', usagePct: 22,
+  licensedSeats: 60, activeUsers: 13, source: 'Salesforce', triggerCondition: 'Health score drop > 25 pts + renewal < 21 days',
+  dateDetected: 'Apr 6, 2026', playbookName: 'Renewal Risk Response',
+  playbookSteps: ['Slack alert sent to Sarah Chen', 'Salesforce task created — Priority: Urgent', 'Training email drafted and sent to account admin', '30-min call scheduled via Calendly'],
+  activityLog: [],
+  isLive: true,
+};
+
+const BASE_SIGNALS = [
   {
     id: 'SIG-001', company: 'Acme Corp', signalType: 'Low Feature Adoption', severity: 'high', status: 'open',
     description: 'Advanced Analytics purchased 67 days ago — 0 active users out of 12 licensed seats.',
@@ -10,7 +25,7 @@ const signals = [
     plan: 'Growth', feature: 'Advanced Analytics', activationDate: 'Jan 28, 2026', usagePct: 0,
     licensedSeats: 12, activeUsers: 0, source: 'Amplitude', triggerCondition: 'Feature adoption < 10% after 60 days',
     dateDetected: 'Apr 3, 2026', playbookName: 'Feature Adoption Recovery',
-    playbookSteps: ['Notify CSM Sarah Chen via Slack', 'Create Salesforce task: Schedule adoption call', 'Send personalized training email to account admin', 'Schedule 30-min onboarding call with key users'],
+    playbookSteps: ['Slack alert sent to Sarah Chen', 'Salesforce task created — Priority: Urgent', 'Training email drafted and sent to account admin', '30-min call scheduled via Calendly'],
     activityLog: [],
   },
   {
@@ -20,7 +35,7 @@ const signals = [
     plan: 'Starter', feature: 'Core Platform', activationDate: 'Oct 12, 2025', usagePct: 12,
     licensedSeats: 8, activeUsers: 2, source: 'Mixpanel', triggerCondition: 'Key users inactive > 10 days',
     dateDetected: 'Apr 4, 2026', playbookName: 'Re-Engagement Campaign',
-    playbookSteps: ['Alert CSM Marcus Johnson with account context', 'Send "We miss you" re-engagement email sequence', 'Create Salesforce task: Outreach within 48h', 'Flag account for health review in next team standup'],
+    playbookSteps: ['Slack alert sent to Marcus Johnson', 'Salesforce task created — Priority: High', 'Re-engagement email sent to 3 inactive users', '30-min call scheduled via Calendly'],
     activityLog: [{ date: 'Apr 3, 2026', action: 'Signal detected and assigned to Marcus Johnson' }],
   },
   {
@@ -30,7 +45,7 @@ const signals = [
     plan: 'Professional', feature: 'Full Platform', activationDate: 'Mar 1, 2025', usagePct: 94,
     licensedSeats: 50, activeUsers: 47, source: 'Segment', triggerCondition: 'Plan utilization > 90% for 7 days',
     dateDetected: 'Apr 4, 2026', playbookName: 'Expansion & Upsell',
-    playbookSteps: ['Notify Account Executive of upsell opportunity', 'Create Salesforce opportunity: Expansion deal', 'Send usage report to account champion', 'Schedule business review to discuss Enterprise upgrade'],
+    playbookSteps: ['Slack alert sent to Sarah Chen', 'Salesforce opportunity created — Expansion deal', 'Usage report sent to account champion', 'Business review scheduled to discuss Enterprise upgrade'],
     activityLog: [],
   },
   {
@@ -40,8 +55,8 @@ const signals = [
     plan: 'Growth', feature: 'API Integration Suite', activationDate: 'Nov 5, 2025', usagePct: 55,
     licensedSeats: 20, activeUsers: 11, source: 'Zendesk', triggerCondition: 'P1 tickets ≥ 3 within 7-day window',
     dateDetected: 'Apr 5, 2026', playbookName: 'Support Escalation Response',
-    playbookSteps: ['Page CSM Alex Rivera immediately', 'Create Salesforce escalation task with priority: urgent', 'Loop in Support Engineering team lead', 'Schedule executive sponsor call within 24h'],
-    activityLog: [{ date: 'Apr 5, 2026', action: 'Escalation pattern detected — auto-assigned to Alex Rivera' }, { date: 'Apr 5, 2026', action: 'Slack notification sent to CS team channel' }],
+    playbookSteps: ['Slack alert sent to Alex Rivera', 'Salesforce escalation task created — Priority: Urgent', 'Support Engineering team lead looped in', 'Executive sponsor call scheduled within 24h'],
+    activityLog: [{ date: 'Apr 5, 2026', action: 'Escalation pattern detected — auto-assigned to Alex Rivera' }],
   },
   {
     id: 'SIG-007', company: 'Nexus Health', signalType: 'Feature Adoption Recovery', severity: 'high', status: 'actioned',
@@ -50,7 +65,7 @@ const signals = [
     plan: 'Growth', feature: 'Advanced Analytics', activationDate: 'Feb 10, 2026', usagePct: 38,
     licensedSeats: 15, activeUsers: 6, source: 'Amplitude', triggerCondition: 'Feature adoption < 10% after 60 days',
     dateDetected: 'Apr 1, 2026', playbookName: 'Feature Adoption Recovery',
-    playbookSteps: ['Notify CSM Sarah Chen via Slack', 'Create Salesforce task: Schedule adoption call', 'Send personalized training email to account admin', 'Schedule 30-min onboarding call with key users'],
+    playbookSteps: ['Slack alert sent to Sarah Chen', 'Salesforce task created — Priority: High', 'Training email drafted and sent to account admin', '30-min call scheduled via Calendly'],
     activityLog: [
       { date: 'Apr 1, 2026', action: 'Signal detected — assigned to Sarah Chen' },
       { date: 'Apr 1, 2026', action: 'Playbook "Feature Adoption Recovery" triggered' },
@@ -66,11 +81,9 @@ const signals = [
     plan: 'Professional', feature: 'Full Platform', activationDate: 'Apr 30, 2024', usagePct: 64,
     licensedSeats: 40, activeUsers: 26, source: 'Salesforce', triggerCondition: 'Health score drop > 20 pts + renewal < 45 days',
     dateDetected: 'Mar 29, 2026', playbookName: 'Renewal Risk Response',
-    playbookSteps: ['Alert CSM + VP CS immediately', 'Create Salesforce task: Emergency QBR outreach', 'Send personalized renewal value email', 'Schedule executive business review ASAP'],
+    playbookSteps: ['Slack alert sent to Marcus Johnson', 'Salesforce task created — Priority: Urgent', 'Renewal value email sent to CFO and Champion', 'Emergency QBR scheduled ASAP'],
     activityLog: [
       { date: 'Mar 29, 2026', action: 'Critical renewal risk signal detected' },
-      { date: 'Mar 29, 2026', action: 'Playbook triggered — VP CS Danielle Wu notified' },
-      { date: 'Mar 30, 2026', action: 'Renewal value email sent to CFO and Champion' },
       { date: 'Apr 1, 2026', action: 'Emergency QBR completed — exec sponsor re-engaged' },
       { date: 'Apr 3, 2026', action: 'Renewal confirmed — 2-year contract signed' },
     ],
@@ -82,11 +95,9 @@ const signals = [
     plan: 'Starter', feature: 'Core Platform', activationDate: 'Aug 1, 2025', usagePct: 72,
     licensedSeats: 12, activeUsers: 9, source: 'Mixpanel', triggerCondition: 'Key users inactive > 10 days',
     dateDetected: 'Mar 31, 2026', playbookName: 'Re-Engagement Campaign',
-    playbookSteps: ['Alert CSM Alex Rivera with account context', 'Send "We miss you" re-engagement email sequence', 'Create Salesforce task: Outreach within 48h', 'Flag account for health review in next standup'],
+    playbookSteps: ['Slack alert sent to Alex Rivera', 'Salesforce task created — Priority: Medium', 'Re-engagement email sent to 4 inactive users', 'Account flagged for health review in standup'],
     activityLog: [
       { date: 'Mar 31, 2026', action: 'Signal detected — 4 users inactive for 12+ days' },
-      { date: 'Mar 31, 2026', action: 'Playbook triggered — Alex Rivera notified' },
-      { date: 'Apr 1, 2026', action: 'Re-engagement email sequence sent to 4 users' },
       { date: 'Apr 3, 2026', action: '3 of 4 users logged back in — health score recovering' },
       { date: 'Apr 5, 2026', action: 'Account flagged as recovered — signal resolved' },
     ],
@@ -98,7 +109,7 @@ const signals = [
     plan: 'Starter', feature: 'Workflow Builder', activationDate: 'Feb 3, 2026', usagePct: 4,
     licensedSeats: 45, activeUsers: 2, source: 'Amplitude', triggerCondition: 'Feature adoption < 15% after 30 days',
     dateDetected: 'Apr 2, 2026', playbookName: 'Feature Adoption Recovery',
-    playbookSteps: ['Notify CSM Marcus Johnson via Slack', 'Create Salesforce task: Schedule adoption call', 'Send personalized training email to account admin', 'Schedule 30-min onboarding call with key users'],
+    playbookSteps: ['Slack alert sent to Marcus Johnson', 'Salesforce task created — Priority: Medium', 'Training email drafted and sent to account admin', '30-min call scheduled via Calendly'],
     activityLog: [{ date: 'Apr 2, 2026', action: 'Signal detected — snoozed for 7 days by Marcus Johnson' }],
   },
   {
@@ -108,7 +119,7 @@ const signals = [
     plan: 'Professional', feature: 'Full Platform', activationDate: 'May 7, 2025', usagePct: 28,
     licensedSeats: 30, activeUsers: 8, source: 'Salesforce', triggerCondition: 'Health score drop > 20 pts + renewal < 45 days',
     dateDetected: 'Apr 5, 2026', playbookName: 'Renewal Risk Response',
-    playbookSteps: ['Immediately alert CSM Sarah Chen + VP CS', 'Create Salesforce task: Emergency QBR outreach', 'Send personalized renewal value email', 'Schedule executive business review ASAP'],
+    playbookSteps: ['Slack alert sent to Sarah Chen and VP CS', 'Salesforce task created — Priority: Urgent', 'Renewal value email sent to CFO and Champion', 'Emergency QBR scheduled ASAP'],
     activityLog: [],
   },
 ];
@@ -127,6 +138,15 @@ const STATUS = {
   snoozed:  { label: 'SNOOZED',  cls: 'text-muted-foreground border-border bg-secondary' },
 };
 
+const PLAYBOOK_STEP_META = [
+  { icon: '💬', label: 'Slack', color: '#4A154B' },
+  { icon: '☁️', label: 'Salesforce', color: '#00A1E0' },
+  { icon: '✉️', label: 'Email', color: '#16a34a' },
+  { icon: '📅', label: 'Calendly', color: '#006BFF' },
+];
+
+// ─── Subcomponents ───────────────────────────────────────────────────────────
+
 function HealthBar({ score }) {
   const color = score >= 70 ? '#16a34a' : score >= 40 ? '#f97316' : '#ef4444';
   return (
@@ -139,55 +159,89 @@ function HealthBar({ score }) {
   );
 }
 
-function SignalRow({ signal, onClick, onAction }) {
+function AnimatedNumber({ value, flash }) {
+  return (
+    <motion.p
+      key={value}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, color: flash ? '#15803d' : undefined }}
+    >
+      {value}
+    </motion.p>
+  );
+}
+
+function StatTile({ label, value, numColor, topColor, flash }) {
+  return (
+    <motion.div
+      animate={flash ? { backgroundColor: ['#F8F9FA', '#dcfce7', '#F8F9FA'] } : {}}
+      transition={{ duration: 0.5 }}
+      style={{ background: '#F8F9FA', border: '1px solid #E5E7EB', borderTop: `3px solid ${topColor}`, borderRadius: 8, padding: 20 }}
+    >
+      <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 8 }}>{label}</p>
+      <AnimatedNumber value={value} flash={flash} />
+    </motion.div>
+  );
+}
+
+function SignalRow({ signal, onClick, onAction, isNew }) {
   const sev = SEV[signal.severity] || SEV.medium;
   const status = STATUS[signal.status];
+  const [showNew, setShowNew] = useState(isNew);
+
+  useEffect(() => {
+    if (isNew) {
+      const t = setTimeout(() => setShowNew(false), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [isNew]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: -16, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: -12 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
       onClick={() => onClick(signal)}
-      className="relative flex items-stretch cursor-pointer group overflow-hidden rounded-lg border border-border bg-white hover:shadow-sm transition-shadow"
+      className={`relative flex items-stretch cursor-pointer group overflow-hidden rounded-lg border bg-white hover:shadow-sm transition-shadow ${
+        isNew ? 'border-red-300 shadow-[0_0_12px_rgba(239,68,68,0.2)]' : 'border-border'
+      }`}
     >
-      {/* Severity bar */}
+      {isNew && (
+        <motion.div
+          className="absolute inset-0 rounded-lg pointer-events-none"
+          animate={{ boxShadow: ['0 0 0px rgba(239,68,68,0)', '0 0 16px rgba(239,68,68,0.3)', '0 0 0px rgba(239,68,68,0)'] }}
+          transition={{ duration: 1.5, repeat: 3 }}
+        />
+      )}
       <div className="w-1 shrink-0 self-stretch rounded-l-lg" style={{ background: sev.bar }} />
-
       <div className="flex-1 flex items-center gap-4 px-4 py-3 min-w-0">
-        {/* Severity badge */}
-        <span className={`text-[10px] font-bold w-20 shrink-0 uppercase tracking-wide ${sev.text}`}>
-          {sev.label}
-        </span>
-
-        {/* Company + description */}
+        <span className={`text-[10px] font-bold w-20 shrink-0 uppercase tracking-wide ${sev.text}`}>{sev.label}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-sm font-bold text-foreground">{signal.company}</span>
-            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${status.cls}`}>
-              {status.label}
-            </span>
+            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${status.cls}`}>{status.label}</span>
+            <AnimatePresence>
+              {showNew && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+                  className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white animate-pulse"
+                >NEW</motion.span>
+              )}
+            </AnimatePresence>
           </div>
-          <span className="text-xs text-muted-foreground leading-snug block truncate">
-            {signal.description}
-          </span>
+          <span className="text-xs text-muted-foreground leading-snug block truncate">{signal.description}</span>
         </div>
-
-        {/* Source + meta */}
         <div className="flex items-center gap-3 shrink-0">
-          <span className="text-[10px] px-2 py-1 rounded-md border border-border bg-secondary text-muted-foreground">
-            {signal.source}
-          </span>
+          <span className="text-[10px] px-2 py-1 rounded-md border border-border bg-secondary text-muted-foreground">{signal.source}</span>
           <div className="text-right">
             <span className="text-[10px] text-muted-foreground block">{signal.timestamp}</span>
             <span className="text-[10px] text-muted-foreground block">{signal.csm}</span>
           </div>
-          <span className="text-[10px] text-border group-hover:text-muted-foreground transition-colors w-16 text-right font-medium">
-            {signal.id}
-          </span>
+          <span className="text-[10px] text-border group-hover:text-muted-foreground transition-colors w-16 text-right font-medium">{signal.id}</span>
         </div>
-
-        {/* Hover actions */}
         <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
           {[
             { icon: Play, action: 'playbook', title: 'Run Playbook', primary: true },
@@ -195,12 +249,8 @@ function SignalRow({ signal, onClick, onAction }) {
             { icon: Mail, action: 'email', title: 'Send Email' },
             { icon: BellOff, action: 'snooze', title: 'Snooze' },
           ].map(({ icon: Icon, action, title, primary }) => (
-            <button
-              key={action}
-              onClick={e => { e.stopPropagation(); onAction(signal.id, action); }}
-              title={title}
-              className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${primary ? 'hover:bg-primary/10 text-primary' : 'hover:bg-secondary text-muted-foreground'}`}
-            >
+            <button key={action} onClick={e => { e.stopPropagation(); onAction(signal.id, action); }} title={title}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${primary ? 'hover:bg-primary/10 text-primary' : 'hover:bg-secondary text-muted-foreground'}`}>
               <Icon className="w-3.5 h-3.5" />
             </button>
           ))}
@@ -210,19 +260,81 @@ function SignalRow({ signal, onClick, onAction }) {
   );
 }
 
-function SignalModal({ signal, onClose, onAction }) {
-  const [playbookRun, setPlaybookRun] = useState(false);
-  if (!signal) return null;
+function PlaybookExecution({ steps, onComplete }) {
+  const [completedSteps, setCompletedSteps] = useState([]);
+  const [done, setDone] = useState(false);
 
+  useEffect(() => {
+    steps.forEach((_, i) => {
+      setTimeout(() => {
+        setCompletedSteps(prev => [...prev, i]);
+        if (i === steps.length - 1) {
+          setTimeout(() => {
+            setDone(true);
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 }, colors: ['#16a34a', '#4ade80', '#bbf7d0'] });
+            onComplete();
+          }, 400);
+        }
+      }, (i + 1) * 600);
+    });
+  }, []);
+
+  return (
+    <div className="space-y-2">
+      {steps.map((step, i) => {
+        const meta = PLAYBOOK_STEP_META[i] || { icon: '✓', label: '', color: '#16a34a' };
+        const completed = completedSteps.includes(i);
+        return (
+          <AnimatePresence key={i}>
+            {completed && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-200"
+              >
+                <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+                  <CheckCircle className="w-3 h-3 text-white" />
+                </div>
+                <span className="text-xs font-medium text-green-800">{step}</span>
+                <span className="ml-auto text-base">{meta.icon}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        );
+      })}
+      {done && (
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+          className="flex items-center gap-2 p-3 rounded-lg bg-green-600 text-white mt-2">
+          <CheckCircle className="w-4 h-4 shrink-0" />
+          <span className="text-sm font-semibold">Playbook complete — {steps.length} actions taken in {((steps.length * 600) / 1000).toFixed(1)} seconds.</span>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function SignalModal({ signal, onClose, onAction, allSignals, currentIndex, onNavigate }) {
+  const [playbookState, setPlaybookState] = useState('idle'); // idle | running | done
   const sev = SEV[signal.severity] || SEV.medium;
   const status = STATUS[signal.status];
+
+  // Keyboard: Escape, ←, →
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft' && currentIndex > 0) onNavigate(currentIndex - 1);
+      if (e.key === 'ArrowRight' && currentIndex < allSignals.length - 1) onNavigate(currentIndex + 1);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [currentIndex, allSignals]);
 
   return (
     <AnimatePresence>
       <motion.div key="backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose} className="fixed inset-0 z-40 bg-black/40" />
       <motion.div key="modal" initial={{ opacity: 0, scale: 0.97, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.97, y: 8 }} transition={{ duration: 0.16, ease: 'easeOut' }}
+        exit={{ opacity: 0, scale: 0.97, y: 8 }} transition={{ duration: 0.16 }}
         onClick={e => e.stopPropagation()}
         className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
       >
@@ -234,23 +346,31 @@ function SignalModal({ signal, onClose, onAction }) {
             <div>
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <h2 className="text-base font-bold text-foreground">{signal.company}</h2>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${sev.bg} ${sev.text} ${sev.border}`}>
-                  {sev.label}
-                </span>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${status.cls}`}>
-                  {status.label}
-                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${sev.bg} ${sev.text} ${sev.border}`}>{sev.label}</span>
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${status.cls}`}>{status.label}</span>
               </div>
               <span className="text-[11px] text-muted-foreground">{signal.id} · {signal.signalType}</span>
             </div>
-            <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors shrink-0 mt-0.5">
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2 shrink-0 mt-0.5">
+              {allSignals.length > 1 && (
+                <div className="flex items-center gap-1">
+                  <button onClick={() => currentIndex > 0 && onNavigate(currentIndex - 1)}
+                    disabled={currentIndex === 0}
+                    className="w-6 h-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:bg-secondary disabled:opacity-30 text-xs">←</button>
+                  <span className="text-[10px] text-muted-foreground px-1">{currentIndex + 1}/{allSignals.length}</span>
+                  <button onClick={() => currentIndex < allSignals.length - 1 && onNavigate(currentIndex + 1)}
+                    disabled={currentIndex === allSignals.length - 1}
+                    className="w-6 h-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:bg-secondary disabled:opacity-30 text-xs">→</button>
+                </div>
+              )}
+              <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Scrollable content */}
           <div className="flex-1 overflow-y-auto">
-
             {/* Signal Summary */}
             <div className="px-6 py-4 border-b border-border">
               <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">Signal Summary</p>
@@ -323,27 +443,31 @@ function SignalModal({ signal, onClose, onAction }) {
               </div>
             </div>
 
-            {/* Recommended Playbook */}
+            {/* Playbook */}
             <div className="px-6 py-4 border-b border-border">
               <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">Recommended Playbook</p>
-              <div className="rounded-lg p-4 bg-primary/5 border border-primary/20">
-                <span className="text-xs text-foreground font-bold block mb-3">{signal.playbookName}</span>
-                <div className="space-y-2">
-                  {signal.playbookSteps.map((step, i) => (
-                    <div key={i} className="flex items-start gap-2.5">
-                      <span className="w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5 bg-primary/10 text-primary border border-primary/20">{i + 1}</span>
-                      <span className="text-[11px] text-muted-foreground leading-snug">{step}</span>
-                    </div>
-                  ))}
+              {playbookState === 'idle' ? (
+                <div className="rounded-lg p-4 bg-primary/5 border border-primary/20">
+                  <span className="text-xs text-foreground font-bold block mb-3">{signal.playbookName}</span>
+                  <div className="space-y-2">
+                    {signal.playbookSteps.map((step, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <span className="w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5 bg-primary/10 text-primary border border-primary/20">{i + 1}</span>
+                        <span className="text-[11px] text-muted-foreground leading-snug">{step}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <PlaybookExecution steps={signal.playbookSteps} onComplete={() => setPlaybookState('done')} />
+              )}
             </div>
 
             {/* Activity Log */}
             <div className="px-6 py-4">
               <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">Activity Log</p>
               <div className="space-y-2">
-                {playbookRun && (
+                {playbookState !== 'idle' && (
                   <div className="flex items-start gap-2.5">
                     <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 bg-primary" />
                     <div>
@@ -360,23 +484,28 @@ function SignalModal({ signal, onClose, onAction }) {
                       <span className="text-[10px] text-muted-foreground/60">{entry.date}</span>
                     </div>
                   </div>
-                )) : !playbookRun && (
+                )) : playbookState === 'idle' && (
                   <span className="text-[11px] text-muted-foreground/60 italic">No actions taken yet.</span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Sticky bottom action bar */}
+          {/* Bottom bar */}
           <div className="px-6 py-4 shrink-0 border-t border-border bg-secondary/50">
-            {playbookRun ? (
+            {playbookState === 'done' ? (
               <div className="flex items-center gap-2 text-primary">
                 <CheckCircle className="w-4 h-4" />
                 <span className="text-sm font-medium">Playbook running — CSM notified, Salesforce task created</span>
               </div>
+            ) : playbookState === 'running' ? (
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <div className="w-3.5 h-3.5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                <span className="text-sm">Executing playbook steps...</span>
+              </div>
             ) : (
               <div className="flex items-center gap-2">
-                <button onClick={() => { setPlaybookRun(true); onAction(signal.id, 'playbook'); }}
+                <button onClick={() => { setPlaybookState('running'); onAction(signal.id, 'playbook'); }}
                   className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
                   <Play className="w-3.5 h-3.5 fill-current" /> Run Playbook
                 </button>
@@ -397,34 +526,72 @@ function SignalModal({ signal, onClose, onAction }) {
   );
 }
 
+// ─── Main View ────────────────────────────────────────────────────────────────
+
 export default function SignalFeedView() {
   const [filter, setFilter] = useState('all');
-  const [selectedSignal, setSelectedSignal] = useState(null);
+  const [signals, setSignals] = useState(BASE_SIGNALS);
   const [actionedIds, setActionedIds] = useState([]);
+  const [flashTile, setFlashTile] = useState(null);
+  const [selectedIdx, setSelectedIdx] = useState(null);
+
+  // Live signal injection after 3s
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setSignals(prev => {
+        if (prev.find(s => s.id === LIVE_SIGNAL.id)) return prev;
+        return [LIVE_SIGNAL, ...prev];
+      });
+      // ping sound
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 880; osc.type = 'sine';
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
+      } catch (_) {}
+    }, 3000);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleAction = (id, action) => {
-    if (action === 'playbook') setActionedIds(prev => [...prev, id]);
+    if (action === 'playbook') {
+      setActionedIds(prev => {
+        if (prev.includes(id)) return prev;
+        const steps = signals.find(s => s.id === id)?.playbookSteps?.length || 4;
+        setTimeout(() => {
+          setFlashTile('actioned');
+          setTimeout(() => setFlashTile(null), 800);
+        }, steps * 600 + 500);
+        return [...prev, id];
+      });
+    }
   };
+
+  const isActioned = (s) => s.status === 'actioned' || actionedIds.includes(s.id);
 
   const counts = {
     all: signals.length,
-    open: signals.filter(s => s.status === 'open').length,
-    actioned: signals.filter(s => s.status === 'actioned' || actionedIds.includes(s.id)).length,
+    open: signals.filter(s => s.status === 'open' && !actionedIds.includes(s.id)).length,
+    actioned: signals.filter(isActioned).length,
     snoozed: signals.filter(s => s.status === 'snoozed').length,
   };
 
   const filtered = signals.filter(s => {
     if (filter === 'all') return true;
-    if (filter === 'open') return s.status === 'open';
-    if (filter === 'actioned') return s.status === 'actioned' || actionedIds.includes(s.id);
+    if (filter === 'open') return s.status === 'open' && !actionedIds.includes(s.id);
+    if (filter === 'actioned') return isActioned(s);
     if (filter === 'snoozed') return s.status === 'snoozed';
     return true;
   });
 
   const statTiles = [
     { label: 'TOTAL SIGNALS', value: counts.all,      numColor: '#1d4ed8', topColor: '#3b82f6' },
-    { label: 'OPEN',          value: counts.open,     numColor: '#ea580c', topColor: '#f97316' },
-    { label: 'ACTIONED',      value: counts.actioned, numColor: '#15803d', topColor: '#16a34a' },
+    { label: 'OPEN',          value: counts.open,     numColor: '#ea580c', topColor: '#f97316', flash: flashTile === 'open' },
+    { label: 'ACTIONED',      value: counts.actioned, numColor: '#15803d', topColor: '#16a34a', flash: flashTile === 'actioned' },
     { label: 'SNOOZED',       value: counts.snoozed,  numColor: '#6b7280', topColor: '#9ca3af' },
   ];
 
@@ -435,38 +602,43 @@ export default function SignalFeedView() {
     { id: 'snoozed',  label: `Snoozed (${counts.snoozed})` },
   ];
 
+  const selectedSignal = selectedIdx !== null ? filtered[selectedIdx] : null;
+
   return (
     <div className="h-full">
-      {/* Stats tiles */}
+      {/* Stat tiles */}
       <div className="grid grid-cols-4 gap-3 mb-5">
         {statTiles.map(t => (
-          <div key={t.label} style={{ background: '#F8F9FA', border: '1px solid #E5E7EB', borderTop: `3px solid ${t.topColor}`, borderRadius: 8, padding: 20 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', marginBottom: 8 }}>{t.label}</p>
-            <p style={{ fontSize: 28, fontWeight: 700, color: t.numColor, lineHeight: 1 }}>{t.value}</p>
-          </div>
+          <StatTile key={t.label} {...t} />
         ))}
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex gap-0 mb-4 border-b border-border">
-        {filterTabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setFilter(tab.id)}
-            className={`px-4 py-2 text-xs font-semibold transition-all border-b-2 -mb-px ${
-              filter === tab.id ? 'text-primary border-b-primary' : 'text-muted-foreground border-b-transparent hover:text-foreground'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* Filter tabs + LIVE indicator */}
+      <div className="flex items-center justify-between mb-4 border-b border-border">
+        <div className="flex gap-0">
+          {filterTabs.map(tab => (
+            <button key={tab.id} onClick={() => setFilter(tab.id)}
+              className={`px-4 py-2 text-xs font-semibold transition-all border-b-2 -mb-px ${
+                filter === tab.id ? 'text-primary border-b-primary' : 'text-muted-foreground border-b-transparent hover:text-foreground'
+              }`}>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-1.5 pb-2">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-[10px] font-semibold text-green-600">LIVE</span>
+        </div>
       </div>
 
       {/* Signal rows */}
       <div className="space-y-1.5">
         <AnimatePresence>
-          {filtered.map(signal => (
-            <SignalRow key={signal.id} signal={signal} onClick={setSelectedSignal} onAction={handleAction} />
+          {filtered.map((signal, idx) => (
+            <SignalRow key={signal.id} signal={signal} isNew={signal.isLive}
+              onClick={() => setSelectedIdx(idx)}
+              onAction={handleAction}
+            />
           ))}
         </AnimatePresence>
         {filtered.length === 0 && (
@@ -475,7 +647,14 @@ export default function SignalFeedView() {
       </div>
 
       {selectedSignal && (
-        <SignalModal signal={selectedSignal} onClose={() => setSelectedSignal(null)} onAction={handleAction} />
+        <SignalModal
+          signal={selectedSignal}
+          onClose={() => setSelectedIdx(null)}
+          onAction={handleAction}
+          allSignals={filtered}
+          currentIndex={selectedIdx}
+          onNavigate={setSelectedIdx}
+        />
       )}
     </div>
   );

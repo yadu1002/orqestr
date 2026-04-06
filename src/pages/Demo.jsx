@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DemoSidebar from '../components/demo/DemoSidebar';
 import DemoHeader from '../components/demo/DemoHeader';
 import SignalFeedView from '../components/demo/SignalFeedView';
@@ -11,10 +11,27 @@ import AdminDemoView from '../components/demo/AdminDemoView';
 export default function Demo() {
   const [activeView, setActiveView] = useState('signals');
 
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 's' || e.key === 'S') setActiveView('signals');
+      if (e.key === 'a' || e.key === 'A') setActiveView('accounts');
+      if (e.key === 'p' || e.key === 'P') setActiveView('playbooks');
+      if (e.key === 'i' || e.key === 'I') setActiveView('integrations');
+      if (e.key === 'n' || e.key === 'N') setActiveView('analytics');
+      if (e.key === 'r' || e.key === 'R') {
+        if (window.confirm('Reset demo to initial state?')) setActiveView('signals');
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
   const views = {
     signals: <SignalFeedView />,
     playbooks: <PlaybooksView />,
-    accounts: <AccountsView />,
+    accounts: <AccountsView onNavigate={setActiveView} />,
     integrations: <IntegrationsView />,
     analytics: <AnalyticsView />,
     admin: <AdminDemoView />,

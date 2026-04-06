@@ -2,30 +2,22 @@ import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const titles = {
-  signals:      'Signal Feed',
-  playbooks:    'Playbooks',
-  accounts:     'Accounts',
-  integrations: 'Integrations',
-  analytics:    'Analytics',
-  admin:        'Waitlist Admin',
-};
-
-const subtitles = {
-  signals:      '12 active alerts requiring attention',
-  playbooks:    'Automated response workflows',
-  accounts:     'Customer health overview',
-  integrations: 'Connected data sources',
-  analytics:    'Playbook performance & outcomes',
-  admin:        'Sample waitlist signups and intent data',
+const META = {
+  signals:      { title: 'Signal Feed',    subtitle: '6 active alerts requiring attention' },
+  playbooks:    { title: 'Playbooks',       subtitle: '5 active playbooks · 68% completion rate' },
+  accounts:     { title: 'Accounts',        subtitle: '8 accounts · $819k total ARR · 3 at risk' },
+  integrations: { title: 'Integrations',    subtitle: '3 connected · 4 available' },
+  analytics:    { title: 'Analytics',       subtitle: 'Last 30 days · signal and playbook performance' },
+  admin:        { title: 'Waitlist Admin',  subtitle: 'Sample waitlist signups and intent data' },
 };
 
 export default function DemoHeader({ activeView }) {
+  const { title, subtitle } = META[activeView] || META.signals;
   return (
     <div className="h-14 shrink-0 flex items-center justify-between px-6 bg-white border-b border-border">
       <div>
-        <h1 className="text-sm font-bold text-foreground">{titles[activeView]}</h1>
-        <p className="text-[11px] text-primary font-medium">{subtitles[activeView]}</p>
+        <h1 className="text-sm font-bold text-foreground">{title}</h1>
+        <p className="text-[11px] text-primary font-medium">{subtitle}</p>
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 rounded-lg px-3 py-1.5 bg-secondary border border-border">
