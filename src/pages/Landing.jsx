@@ -4,6 +4,7 @@ import HeroSection from '../components/landing/HeroSection';
 import SocialProofBar from '../components/landing/SocialProofBar';
 import ProblemSection from '../components/landing/ProblemSection';
 import HowItWorks from '../components/landing/HowItWorks';
+import CustomerPainSection from '../components/landing/CustomerPainSection';
 import IntegrationBar from '../components/landing/IntegrationBar';
 import UseCaseTimeline from '../components/landing/UseCaseTimeline';
 import PlaybookDemo from '../components/landing/PlaybookDemo';
@@ -31,6 +32,7 @@ export default function Landing() {
         <div id="problem">
           <ProblemSection />
         </div>
+        <CustomerPainSection />
         <div id="how-it-works">
           <HowItWorks />
         </div>
