@@ -54,28 +54,48 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 function DonutChart({ pct, label }) {
+  const size = 120;
+  const cx = size / 2;
+  const cy = size / 2;
   const r = 44;
-  const circ = 2 * Math.PI * r;
-  const dash = (pct / 100) * circ;
+  // Gauge spans 220 degrees (110 each side from bottom), leaving a 140-degree gap at the bottom
+  const gapDeg = 140;
+  const arcDeg = 360 - gapDeg; // 220
+  const startDeg = 90 + gapDeg / 2; // 160
+  const endDeg = 90 - gapDeg / 2;   // -60 (= 300)
+
+  const toRad = (d) => (d * Math.PI) / 180;
+
+  const polarX = (angle, radius) => cx + radius * Math.cos(toRad(angle));
+  const polarY = (angle, radius) => cy + radius * Math.sin(toRad(angle));
+
+  const describeArc = (startAngle, endAngle, radius) => {
+    const start = { x: polarX(startAngle, radius), y: polarY(startAngle, radius) };
+    const end = { x: polarX(endAngle, radius), y: polarY(endAngle, radius) };
+    const largeArc = (endAngle - startAngle + 360) % 360 > 180 ? 1 : 0;
+    return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+  };
+
+  // Track: full 220-degree arc
+  const trackPath = describeArc(startDeg, startDeg - arcDeg, r);
+  // Fill: percentage of the 220-degree arc
+  const fillEnd = startDeg - (pct / 100) * arcDeg;
+  const fillPath = describeArc(startDeg, fillEnd, r);
+
   const GREEN = '#16a34a';
 
   return (
     <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 8, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <p style={{ fontSize: 12, fontWeight: 500, color: '#374151', marginBottom: 14, textAlign: 'center' }}>{label}</p>
-      <div style={{ position: 'relative', width: 110, height: 110 }}>
-        <svg width="110" height="110" style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx="55" cy="55" r={r} fill="none" stroke="#E5E7EB" strokeWidth="11" />
-          <circle
-            cx="55" cy="55" r={r} fill="none"
-            stroke={GREEN} strokeWidth="11"
-            strokeDasharray={`${dash} ${circ}`}
-            strokeLinecap="round"
-          />
+      <div style={{ position: 'relative', width: size, height: size * 0.78 }}>
+        <svg width={size} height={size} style={{ overflow: 'visible', position: 'absolute', top: 0, left: 0 }}>
+          <path d={trackPath} fill="none" stroke="#E5E7EB" strokeWidth="10" strokeLinecap="round" />
+          <path d={fillPath} fill="none" stroke={GREEN} strokeWidth="10" strokeLinecap="round" />
         </svg>
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 22, fontWeight: 700, color: '#111827' }}>{pct} %</span>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: 0 }}>
+          <span style={{ fontSize: 20, fontWeight: 700, color: '#111827' }}>{pct} %</span>
         </div>
       </div>
+      <p style={{ marginTop: 8, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', textAlign: 'center' }}>{label}</p>
     </div>
   );
 }
