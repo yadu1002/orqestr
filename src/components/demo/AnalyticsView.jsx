@@ -35,10 +35,10 @@ const kpiStats = [
 ];
 
 const donuts = [
-  { label: 'FEATURE ADOPTION RATE', pct: 72, color: '#3b82f6' },
-  { label: 'PLAYBOOK COMPLETION RATE', pct: 68, color: '#3b82f6' },
-  { label: 'AT-RISK ACCOUNT RATIO', pct: 35, color: '#f97316' },
-  { label: 'EXPANSION COVERAGE', pct: 24, color: '#3b82f6' },
+  { label: 'Feature Adoption Rate', pct: 72 },
+  { label: 'Playbook Completion Rate', pct: 68 },
+  { label: 'At-Risk Account Ratio', pct: 35 },
+  { label: 'Expansion Coverage', pct: 24 },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -53,28 +53,29 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-function DonutChart({ pct, color, label }) {
-  const r = 36;
+function DonutChart({ pct, label }) {
+  const r = 44;
   const circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
+  const GREEN = '#16a34a';
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 8, padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ position: 'relative', width: 96, height: 96 }}>
-        <svg width="96" height="96" style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx="48" cy="48" r={r} fill="none" stroke="#E5E7EB" strokeWidth="10" />
+    <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 8, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <p style={{ fontSize: 12, fontWeight: 500, color: '#374151', marginBottom: 14, textAlign: 'center' }}>{label}</p>
+      <div style={{ position: 'relative', width: 110, height: 110 }}>
+        <svg width="110" height="110" style={{ transform: 'rotate(-90deg)' }}>
+          <circle cx="55" cy="55" r={r} fill="none" stroke="#E5E7EB" strokeWidth="11" />
           <circle
-            cx="48" cy="48" r={r} fill="none"
-            stroke={color} strokeWidth="10"
+            cx="55" cy="55" r={r} fill="none"
+            stroke={GREEN} strokeWidth="11"
             strokeDasharray={`${dash} ${circ}`}
             strokeLinecap="round"
           />
         </svg>
         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>{pct}%</span>
+          <span style={{ fontSize: 22, fontWeight: 700, color: '#111827' }}>{pct} %</span>
         </div>
       </div>
-      <p style={{ marginTop: 10, fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#374151', textAlign: 'center' }}>{label}</p>
     </div>
   );
 }
