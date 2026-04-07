@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const udayPhoto = "https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/cab0b13e6_240F2BE1-E623-4AD1-8FAD-08174BCD00A3_1_105_c.jpg";
-const abnerPhoto = "https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/977fe9c59_F5916C27-F333-46EF-9D23-CA4A94EBDA87.jpg";
+const shubhadaPhoto = "https://media.base44.com/images/public/69b99ed6c3a6d72f46930260/65bed8622_d5125165-5566-45cb-b7ac-909c9b22fa24.jpg";
 
 function FounderCard({ photo, name, role, delay }) {
   return (
@@ -75,11 +75,11 @@ export default function FoundersSection() {
             </p>
           </motion.div>
 
-          {/* Abner */}
+          {/* Shubhada */}
           <FounderCard
-            photo={abnerPhoto}
-            name="Abner Noel"
-            role="Co-Founder · Computer Science · Georgia Tech"
+            photo={shubhadaPhoto}
+            name="Shubhada Mandala"
+            role="Co-Founder · Computer Science · Georgia State"
             delay={0.3}
           />
         </div>
