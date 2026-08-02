@@ -1,0 +1,72 @@
+{
+  "name": "WaitlistSignup",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Full name of the person"
+    },
+    "work_email": {
+      "type": "string",
+      "description": "Work email address"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Company name"
+    },
+    "company_size": {
+      "type": "string",
+      "enum": [
+        "1-50",
+        "51-200",
+        "201-500",
+        "500+"
+      ],
+      "description": "Company size range"
+    },
+    "current_tool": {
+      "type": "string",
+      "enum": [
+        "Gainsight",
+        "ChurnZero",
+        "Vitally",
+        "Totango",
+        "Salesforce only",
+        "Spreadsheets/manual",
+        "Other"
+      ],
+      "description": "Current CS or RevOps tool"
+    },
+    "biggest_pain_point": {
+      "type": "string",
+      "enum": [
+        "Slow response to churn signals",
+        "Poor feature adoption visibility",
+        "Manual cross-team coordination",
+        "No clear playbooks",
+        "Other"
+      ],
+      "description": "Biggest pain point"
+    }
+  },
+  "required": [
+    "work_email"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
